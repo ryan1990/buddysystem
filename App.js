@@ -1,12 +1,10 @@
 import React from 'react';
-import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 //import LinearGradient from 'react-native-linear-gradient';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Time Practiced</Text>
-      <Text style={styles.titleText}>MM:SS</Text>      
+    <View style={styles.container}>  
       <Stopwatch />
     </View>
   );
@@ -26,7 +24,7 @@ class Stopwatch extends React.Component {
     // Alternative approach that doesn't use the state callback function, just sets state directly. 
     // I wouldn't think you would need to check the state within the setState execution. 
     // This should all evaluate during the click so you should be fine
-    if(this.state.status == "running"){
+    if(this.state.status == "running") {
       clearInterval(this.timer);
       this.setState({status: "paused"});
     } else {
@@ -80,6 +78,8 @@ class Stopwatch extends React.Component {
     const { status, runningTime } = this.state;
     return (
       <View>
+        <Text style={styles.titleText}>Time Practiced</Text>
+        <Text style={styles.titleText}>MM:SS</Text>    
         <Text style={styles.countNumbers}>{this.convertMsToMinutes(runningTime)}</Text>
         
         {/* <Button
@@ -91,8 +91,19 @@ class Stopwatch extends React.Component {
           }}
           onPress={this.handleStartPause} title={status === 'unstarted' ? '88Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
          */}
-         
-        <Button onPress={this.handleStartPause} title={status === 'unstarted' ? '88Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
+
+{/*         
+
+        <TouchableOpacity onPress={this.handlPress}>
+          <Text style={styles.button}>Click Me!</Text>
+        </TouchableOpacity> */}
+
+
+        <Text />
+        <Button onPress={this.handleStartPause} title={status === 'unstarted' ? 'Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
+        <Text />
+        <Text />
+        <Text />
         <Button onPress={this.handleComplete} disabled={status === 'unstarted'} title="Complete Practice Session" />
       </View>
     );
@@ -109,6 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   titleText: {
+    textAlign: 'center',
     fontSize: 40,
     fontWeight: 'bold',
   },
@@ -116,6 +128,18 @@ const styles = StyleSheet.create({
     fontSize: 100,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  button: {
+    backgroundColor: 'blue',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 12,
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    padding: 12,
+    textAlign:'center',
   }
 });
 
