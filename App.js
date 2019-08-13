@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-//import LinearGradient from 'react-native-linear-gradient';
 
 export default function App() {
   return (
@@ -34,27 +33,6 @@ class Stopwatch extends React.Component {
       }, 1000);
       this.setState({status: "running"});
     }
-
-    // // OPTION 2: adapted version of your original
-    // // Tried stripping out the embedded set state calls. those seem weird to me.
-    // // They are mixing this.state and using the prevState variable, not sure why they are doing that.
-    // this.setState((prevState) => {
-    //   if (prevState.status == "running") {
-    //     clearInterval(this.timer);
-    //     return{ status: "paused" };
-    //     // this.setState({status: "paused"});
-    //   } else {
-    //     // I'm confused what this sequence does. it seems like you grab the current time multiple times so I'm a bit lost with
-    //     // the setInterval call in there, but if it's not broken, I guess don't fix it. :)
-    //     const startTime = Date.now() - this.state.runningTime;
-    //     this.timer = setInterval(() => {
-    //       this.setState({ runningTime: Date.now() - startTime });
-    //     }, 1000);
-    //     return {status: "running"};
-    //     // this.setState({status: "running"});
-    //   }
-    //   // return { status: !state.status };
-    // });
   };
 
   handleComplete = () => {
@@ -82,23 +60,6 @@ class Stopwatch extends React.Component {
         <Text style={styles.titleText}>MM:SS</Text>    
         <Text style={styles.countNumbers}>{this.convertMsToMinutes(runningTime)}</Text>
         
-        {/* <Button
-          ViewComponent={LinearGradient} // Don't forget this!
-          linearGradientProps={{
-            colors: ['red', 'pink'],
-            start: { x: 0, y: 0.5 },
-            end: { x: 1, y: 0.5 },
-          }}
-          onPress={this.handleStartPause} title={status === 'unstarted' ? '88Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
-         */}
-
-{/*         
-
-        <TouchableOpacity onPress={this.handlPress}>
-          <Text style={styles.button}>Click Me!</Text>
-        </TouchableOpacity> */}
-
-
         <Text />
         <Button onPress={this.handleStartPause} title={status === 'unstarted' ? 'Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
         <Text />
@@ -128,18 +89,6 @@ const styles = StyleSheet.create({
     fontSize: 100,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  button: {
-    backgroundColor: 'blue',
-    borderColor: 'white',
-    borderWidth: 1,
-    borderRadius: 12,
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    overflow: 'hidden',
-    padding: 12,
-    textAlign:'center',
   }
 });
 
