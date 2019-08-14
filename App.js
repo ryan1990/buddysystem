@@ -1,5 +1,6 @@
+// React Native Mobile time tracker app used to capture music practice sessions.
 import React from 'react';
-import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
   return (
@@ -9,6 +10,7 @@ export default function App() {
   );
 }
 
+// Time tracker component
 class Stopwatch extends React.Component {
   constructor() {
     super();
@@ -20,10 +22,8 @@ class Stopwatch extends React.Component {
   }
 
   handleStartPause = () => {
-    // Alternative approach that doesn't use the state callback function, just sets state directly. 
-    // I wouldn't think you would need to check the state within the setState execution. 
-    // This should all evaluate during the click so you should be fine
-    if(this.state.status == "running") {
+    // Sets state directly from click of the Start/Pause button 
+    if (this.state.status == "running") {
       clearInterval(this.timer);
       this.setState({status: "paused"});
     } else {
@@ -72,7 +72,6 @@ class Stopwatch extends React.Component {
 }
 
 // STYLES:
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
