@@ -2,6 +2,8 @@
 import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
+// Stopwatch page should show email they are logged in as.
+
 // Time tracker component
 export default class StopwatchScreen extends React.Component {
   constructor() {

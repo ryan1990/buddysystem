@@ -5,7 +5,7 @@ import { createAppContainer } from 'react-navigation'; // Version can be specifi
 import { createStackNavigator } from 'react-navigation-stack';
 import StopwatchScreen from './components/StopwatchScreen';
 import LoginScreen from './components/LoginScreen';
-
+import CreateUserScreen from './components/CreateUserScreen';
 
 // user view, login view, stopwatch view
 
@@ -21,6 +21,7 @@ const RootStack = createStackNavigator(
   {
     Stopwatch: StopwatchScreen,
     Login: LoginScreen,
+    CreateUser: CreateUserScreen,
   },
   {
     initialRouteName: 'Stopwatch',

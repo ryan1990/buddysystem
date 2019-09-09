@@ -30,24 +30,8 @@ export default class DetailsScreen extends React.Component {
         <Text>itemId: {JSON.stringify(itemId)}</Text>
         <Text>otherParam: {JSON.stringify(otherParam)}</Text>
         <Button
-          title="Go to Details... again"
-          onPress={() =>
-            this.props.navigation.push('Details', {
-              itemId: Math.floor(Math.random() * 100),
-            })}
-        />
-        <Button
-          title="Update the title"
-          onPress={() =>
-            this.props.navigation.setParams({ otherParam: 'Updated!' })}
-        />
-        <Button
-          title="Go to Home"
-          onPress={() => this.props.navigation.navigate('Home')}
-        />
-        <Button
-          title="Go back"
-          onPress={() => this.props.navigation.goBack()}
+          title="Signup"
+          onPress={() => this.props.navigation.navigate('CreateUser')}
         />
       </View>
     );
