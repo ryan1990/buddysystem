@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
 // Time tracker component
-export default class Stopwatch extends React.Component {
+export default class StopwatchScreen extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -44,10 +44,28 @@ export default class Stopwatch extends React.Component {
     return minutes + ":" + seconds;
   }
 
+  // SEE IF WE NEED
+  static navigationOptions = {
+    // headerTitle instead of title
+    title: 'Stopwatch Title',
+  };
+
   render() {
     const { status, runningTime } = this.state;
     return (
       <View>
+        {/* SEE IF NEED */}
+        <Button
+          title="Go to Login"
+          onPress={() => {
+            /* 1. Navigate to the Login route with params */
+            this.props.navigation.navigate('Login', {
+              itemId: 86,
+              otherParam: 'anything you want here',
+            });
+          }}
+        />
+        
         <Text style={styles.titleText}>Time Practiced</Text>
         <Text style={styles.titleText}>MM:SS</Text>    
         <Text style={styles.countNumbers}>{this.convertMsToMinutes(runningTime)}</Text>
