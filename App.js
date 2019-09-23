@@ -1,58 +1,64 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
-import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { createAppContainer } from 'react-navigation'; // Version can be specified in package.json
-import { createStackNavigator } from 'react-navigation-stack';
+import * as React from 'react';
+import { Alert, Text, View, StyleSheet } from 'react-native';
+import Constants from 'expo-constants';
+
 import StopwatchScreen from './components/StopwatchScreen';
 import LoginScreen from './components/LoginScreen';
 import CreateUserScreen from './components/CreateUserScreen';
 
-// user view, login view, stopwatch view
-
-// export default function App() {
-//   return (
-//     <View style={styles.container}>  
-//       <Stopwatch />
-//     </View>
-//   );
-// }
-
-const RootStack = createStackNavigator(
-  {
-    Stopwatch: StopwatchScreen,
-    Login: LoginScreen,
-    CreateUser: CreateUserScreen,
-  },
-  {
-    initialRouteName: 'Stopwatch',
-    /* The header config from StopwatchScreen is now here */
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: '#f4511e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
-  }
-);
-
-const AppContainer = createAppContainer(RootStack);
-
 export default class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      screen: "StopwatchScreen" // can be StopwatchScreen, LoginScreen, CreateUserScreen
+    };    
+  }
+
+
+  changeScreen(newScreen) {
+    console.log("changeScreen(): "+newScreen);
+    this.setState({screen: newScreen});
+  }
+  
   render() {
-    return <AppContainer />;
+    return (
+      <View style={styles.container}>
+        {(() => {
+        switch (this.state.screen) {
+          case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreen.bind(this, "LoginScreen")} />;
+          case "LoginScreen":   return <LoginScreen goToCreateUserScreen={this.changeScreen.bind(this, "CreateUserScreen")} />;
+          case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} />;
+        }
+      })()}
+      </View>
+    );
   }
 }
 
-
-// STYLES:
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-  }
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: '#ecf0f1',
+    padding: 8,
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
+
+// was from expo Snack:
+// // STYLES:
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   }
+// });
