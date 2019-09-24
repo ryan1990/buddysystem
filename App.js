@@ -27,7 +27,7 @@ export default class App extends React.Component {
         {(() => {
         switch (this.state.screen) {
           case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreen.bind(this, "LoginScreen")} />;
-          case "LoginScreen":   return <LoginScreen goToCreateUserScreen={this.changeScreen.bind(this, "CreateUserScreen")} />;
+          case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} goToCreateUserScreen={this.changeScreen.bind(this, "CreateUserScreen")} />;
           case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} />;
         }
       })()}
