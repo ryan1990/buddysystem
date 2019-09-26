@@ -4,11 +4,22 @@ import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 // should remove email-validator from file system if not used!
 import { validateEmailAddress } from './Validator';
 
+// SEE THIS!!!
+//https://code.tutsplus.com/tutorials/common-react-native-app-layouts-login-page--cms-27639
+
 export default class LoginScreen extends React.Component {
-  
+  constructor() {
+    super();
+
+    this.state = {
+      emailAddress: ''
+    };
+  }
+
   login() {
-    let emailText = "dummyEmailText@aol.net";
-    if (!validateEmail(emailText)) {
+    const { emailAddress } = this.state;
+
+    if (!validateEmail(emailAddress)) {
       Alert.alert("Please enter a valid email address.");
       return;
     } else {
@@ -39,11 +50,23 @@ export default class LoginScreen extends React.Component {
       <View>
         <Text>Login with your email address if you have an account:</Text>
         <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1 }}
+          value={this.state.emailAddress}
+          onChangeText={(emailAddress) => this.setState({ emailAddress })}
           placeholder="Email address"
+          style={{height: 40, borderColor: 'gray', borderWidth: 1 }}
           // onChangeText={(text) => this.setState({text})}
           // value={this.state.text}
         />
+
+
+{/* 
+        <TextInput
+          value={this.state.password}
+          onChangeText={(password) => this.setState({ password })}
+          placeholder={'Password'}
+          secureTextEntry={true}
+          style={styles.input}
+        /> */}
 
 
         <Text />
