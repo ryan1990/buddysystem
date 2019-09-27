@@ -46,27 +46,11 @@ export default class StopwatchScreen extends React.Component {
     return minutes + ":" + seconds;
   }
 
-  // SEE IF WE NEED
-  static navigationOptions = {
-    // headerTitle instead of title
-    title: 'Stopwatch Title',
-  };
-
   render() {
     const { status, runningTime } = this.state;
     return (
       <View>
-        {/* SEE IF NEED */}
-        <Button
-          title="Go to Login"
-          onPress={() => {
-            /* 1. Navigate to the Login route with params */
-            this.props.navigation.navigate('Login', {
-              itemId: 86,
-              otherParam: 'anything you want here',
-            });
-          }}
-        />
+        <Button title="Logout" onPress={this.props.goToLoginScreen} />
         
         <Text style={styles.titleText}>Time Practiced</Text>
         <Text style={styles.titleText}>MM:SS</Text>    
