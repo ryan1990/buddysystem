@@ -6,6 +6,8 @@ import { validateEmailAddress } from './Validator';
 
 // SEE THIS!!!
 //https://code.tutsplus.com/tutorials/common-react-native-app-layouts-login-page--cms-27639
+//https://scotch.io/tutorials/react-native-app-with-authentication-and-user-management-in-15-minutes
+//https://snack.expo.io/@zvona/a-simple-login-form
 
 export default class LoginScreen extends React.Component {
   constructor() {
