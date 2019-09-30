@@ -1,6 +1,6 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
 import * as React from 'react';
-import { Alert, Text, View, StyleSheet } from 'react-native';
+import { Alert, Text, View, ScrollView, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 
 import StopwatchScreen from './components/StopwatchScreen';
@@ -24,13 +24,15 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {(() => {
-        switch (this.state.screen) {
-          case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreen.bind(this, "LoginScreen")} />;
-          case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} goToCreateUserScreen={this.changeScreen.bind(this, "CreateUserScreen")} />;
-          case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} />;
-        }
-      })()}
+        <ScrollView>
+          {(() => {
+          switch (this.state.screen) {
+            case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreen.bind(this, "LoginScreen")} />;
+            case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} goToCreateUserScreen={this.changeScreen.bind(this, "CreateUserScreen")} />;
+            case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} />;
+          }
+        })()}
+      </ScrollView>
       </View>
     );
   }
@@ -38,18 +40,19 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'white',
+    //backgroundColor: '#ecf0f1',
     padding: 8,
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+  // paragraph: {
+  //   margin: 24,
+  //   fontSize: 18,
+  //   fontWeight: 'bold',
+  //   textAlign: 'center',
+  // },
 });
 
 // was from expo Snack:
