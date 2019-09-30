@@ -1,7 +1,6 @@
 var pattern = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 
-var validateEmailAddress = function(emailAddress)
-{
+var validateEmailAddress = function(emailAddress) {
 	if (!emailAddress || emailAddress.length>254) {
     return false;
   }
@@ -24,4 +23,9 @@ var validateEmailAddress = function(emailAddress)
 	return true;
 }
 
-export { validateEmailAddress };
+var validateUsesOnlyDigitCharacters = function(input) {
+	var isNum = /^\d+$/.test(input);
+	return isNum;
+}
+
+export { validateEmailAddress, validateUsesOnlyDigitCharacters };

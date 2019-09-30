@@ -1,7 +1,7 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
 import * as React from 'react';
 import { Alert, Button, CheckBox, Text, TextInput, View, StyleSheet } from 'react-native';
-import { validateEmailAddress } from './Validator';
+import { validateEmailAddress, validateUsesOnlyDigitCharacters } from './Validator';
 
 // chance to enter email to create new user account. If it exists, tell them and prompt to retry,
 // take them to Stopwatch page.
@@ -17,7 +17,9 @@ export default class CreateUserScreen extends React.Component {
       phoneNumber: '',
       emailAddress: '',
       smartGoal: '',
-      commitment: ''
+      commitment: '',// remove?
+      minutesPerDay: '',
+      daysPerWeek: ''
     };
   }
 
@@ -35,11 +37,23 @@ export default class CreateUserScreen extends React.Component {
       alertMethod("Please enter a valid email address.");
       return false;      
     }
+    if (!(this.validateMinutes(this.state.minutesPerDay))) {
+      alertMethod("Please enter a valid positive number for minutes per day.");
+      return false;
+    }
     return true;
   }
 
   validateContainsText(input) {
     return !(input === '' || input === null);
+  }
+
+  validateMinutes(input) {
+    // CONTINUE HERE AND DECIDE ON HOW COMMITMENT WILL WORK!
+    // check that bigger than 0 and less than or equal to 24*60, AND not empty string
+
+    // ALSO, have return to login button?
+    return validateUsesOnlyDigitCharacters(input);
   }
 
   validateEmail(input) {
@@ -124,6 +138,31 @@ export default class CreateUserScreen extends React.Component {
           style={{ borderColor: 'gray', borderWidth: 1, margin: 10 }}
           multiline={true}
         />
+
+        {/* I will practice (TextInput) minutes per day on (dropdown 1-7) days each week. */}
+        <View style={{flexDirection:"row", height: 30, margin: 10 }}>
+          <View style={{flex: 1}}>
+            <Text>I will practice </Text>
+          </View>
+          <View style={{flex: 1}}>
+            <TextInput
+              value={this.state.minutesPerDay}
+              onChangeText={(minutesPerDay) => this.setState({ minutesPerDay })}
+              style={{borderColor: 'gray', borderWidth: 1 }}
+            />
+          </View>
+          <View style={{flex: 1}}>
+            <Text> minutes per day on </Text>
+          </View>
+
+          <View style={{flex: 1}}>
+            <Text>DROP</Text>
+          </View>
+
+          <View style={{flex: 1}}>
+            <Text> days each week. </Text>
+          </View>
+        </View>
 
         <Text />
         
