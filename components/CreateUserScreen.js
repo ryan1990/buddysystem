@@ -1,6 +1,7 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
 import * as React from 'react';
 import { Alert, Button, CheckBox, Text, TextInput, View, StyleSheet } from 'react-native';
+import { validateEmailAddress } from './Validator';
 
 // chance to enter email to create new user account. If it exists, tell them and prompt to retry,
 // take them to Stopwatch page.
@@ -15,9 +16,34 @@ export default class CreateUserScreen extends React.Component {
       lastName: '',
       phoneNumber: '',
       emailAddress: '',
-      smartGoal: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+      smartGoal: '',
       commitment: ''
     };
+  }
+
+  // injecting dependency for alert method
+  validateInputs(alertMethod) {
+    if (!(this.validateContainsText(this.state.firstName)
+        && this.validateContainsText(this.state.lastName)
+        && this.validateContainsText(this.state.phoneNumber)
+        && this.validateContainsText(this.state.smartGoal)
+        && this.validateContainsText(this.state.commitment))) {
+      alertMethod("Please fill out all text boxes.");
+      return false;
+    }
+    if (!(this.validateEmail(this.state.emailAddress))) {
+      alertMethod("Please enter a valid email address.");
+      return false;      
+    }
+    return true;
+  }
+
+  validateContainsText(input) {
+    return !(input === '' || input === null);
+  }
+
+  validateEmail(input) {
+    return validateEmailAddress(input);
   }
 
   render() {
@@ -105,7 +131,11 @@ export default class CreateUserScreen extends React.Component {
           title="Create User"
           onPress={() => {
               // FIX THIS!!!!
-              // validate all inputs
+              let validInputs = this.validateInputs(Alert.alert);
+              if (!validInputs) {
+                return;
+              }
+
               let userExists = false;//true; // will make api call to backend
 
               if (!userExists) {
