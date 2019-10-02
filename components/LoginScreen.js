@@ -41,18 +41,23 @@ export default class LoginScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text>Login with your email address if you have an account:</Text>
-        <TextInput
-          value={this.state.emailAddress}
-          onChangeText={(emailAddress) => this.setState({ emailAddress })}
-          placeholder="Email address"
-          style={{height: 40, borderColor: 'gray', borderWidth: 1 }}
-        />
-        <Text />
-        <Button title="Login" onPress={this.login.bind(this)} />
-        <Text />
-        <Text />
-        <Button title="Create new account" onPress={this.props.goToCreateUserScreen} />
+        <View style={{ margin: 10 }}>
+          <Text>Login with your email address if you have an account:</Text>
+        </View>
+        <View style={{ margin: 10 }}>        
+          <TextInput
+            value={this.state.emailAddress}
+            onChangeText={(emailAddress) => this.setState({ emailAddress })}
+            placeholder="Email address"
+            style={{height: 40, borderColor: 'gray', borderWidth: 1 }}
+          />
+        </View>
+        <View style={{ margin: 10 }}>
+          <Button title="Login" onPress={this.login.bind(this)} />
+        </View>
+        <View style={{ margin: 10 }}>        
+          <Button title="Create new account" onPress={this.props.goToCreateUserScreen} />
+        </View>
       </View>
     );
   }

@@ -170,8 +170,9 @@ export default class CreateUserScreen extends React.Component {
           <View style={{flex: 1}}>
             <Picker
               selectedValue={this.state.daysPerWeek}
-              onValueChange={(itemValue, itemIndex) => this.setState({ daysPerWeek: itemValue })
-            }>
+              onValueChange={(itemValue, itemIndex) => this.setState({ daysPerWeek: itemValue })}
+              style={{ borderColor: 'gray', borderWidth: 1 }}
+            >
               <Picker.Item label="1" value="1" />
               <Picker.Item label="2" value="2" />
               <Picker.Item label="3" value="3" />

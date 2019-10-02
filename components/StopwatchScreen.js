@@ -50,18 +50,22 @@ export default class StopwatchScreen extends React.Component {
     const { status, runningTime } = this.state;
     return (
       <View>
-        <Button title="Logout" onPress={this.props.goToLoginScreen} />
-        
+        <View style={{ margin: 10 }}>
+          <Button title="Logout" onPress={this.props.goToLoginScreen} />
+        </View>
+
         <Text style={styles.titleText}>Time Practiced</Text>
         <Text style={styles.titleText}>MM:SS</Text>    
         <Text style={styles.countNumbers}>{this.convertMsToMinutes(runningTime)}</Text>
         
-        <Text />
-        <Button onPress={this.handleStartPause} title={status === 'unstarted' ? 'Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
-        <Text />
-        <Text />
-        <Text />
-        <Button onPress={this.handleComplete} disabled={status === 'unstarted'} title="Complete Practice Session" />
+        <View style={{flexDirection: "column" }}>
+          <View style={{ margin: 10 }}>
+            <Button onPress={this.handleStartPause} title={status === 'unstarted' ? 'Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
+          </View>
+          <View style={{ margin: 10 }}>
+            <Button onPress={this.handleComplete} disabled={status === 'unstarted'} title="Complete Practice Session" />
+          </View>
+        </View>
       </View>
     );
   }
