@@ -1,6 +1,6 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 
 // Stopwatch page should show email they are logged in as.
 
@@ -41,9 +41,21 @@ export default class StopwatchScreen extends React.Component {
 
   // given ms: "64333", convert to Minutes:Seconds: "64:33"
   convertMsToMinutes(ms) {
-    let minutes = parseInt((ms/(1000*60))%60)
-    let seconds = parseInt((ms/1000)%60)
-    return minutes + ":" + seconds;
+    let minutes = parseInt((ms/(1000*60))%60);
+    let seconds = parseInt((ms/1000)%60);
+
+    let minutesString = minutes.toString();
+    let secondsString = seconds.toString();
+
+    if (minutesString.length === 1) {
+      minutesString = "0"+minutesString;
+    }
+    
+    if (secondsString.length === 1) {
+      secondsString = "0"+secondsString;
+    }
+
+    return minutesString + ":" + secondsString;
   }
 
   render() {
@@ -55,12 +67,14 @@ export default class StopwatchScreen extends React.Component {
         </View>
 
         <Text style={styles.titleText}>Time Practiced</Text>
-        <Text style={styles.titleText}>MM:SS</Text>    
         <Text style={styles.countNumbers}>{this.convertMsToMinutes(runningTime)}</Text>
         
         <View style={{flexDirection: "column" }}>
           <View style={{ margin: 10 }}>
-            <Button onPress={this.handleStartPause} title={status === 'unstarted' ? 'Start New Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} />
+            <TouchableHighlight style={styles.button} onPress={this.handleStartPause}>
+              <Text style={{ fontSize:25, fontWeight:"bold", paddingVertical:50 }}>{status === 'unstarted' ? 'Start Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'}</Text>
+            </TouchableHighlight>
+            {/* <Button onPress={this.handleStartPause} title={status === 'unstarted' ? 'Start Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} /> */}
           </View>
           <View style={{ margin: 10 }}>
             <Button onPress={this.handleComplete} disabled={status === 'unstarted'} title="Complete Practice Session" />
@@ -73,6 +87,11 @@ export default class StopwatchScreen extends React.Component {
 
 // STYLES:
 const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#00DD00',
+    padding: 10,
+  },
   titleText: {
     textAlign: 'center',
     fontSize: 40,
@@ -84,4 +103,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   }
 });
+
 
