@@ -1,6 +1,8 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
 import * as React from 'react';
-import { Alert, Text, View, ScrollView, StyleSheet } from 'react-native';
+import { AsyncStorage, Text, View, ScrollView, StyleSheet } from 'react-native';
+//import AsyncStorage from '@react-native-community/async-storage';
+
 import Constants from 'expo-constants';
 
 import StopwatchScreen from './components/StopwatchScreen';
@@ -12,9 +14,43 @@ export default class App extends React.Component {
     super();
     this.state = {
       screen: "StopwatchScreen" // can be StopwatchScreen, LoginScreen, CreateUserScreen
-    };    
+    }; 
+    //this.storeData();
+    //this.removeItem();
+    //this.getData();
   }
 
+  // play with AsyncStorage
+  getData = async () => {
+    try {
+      let key = '@storage_Key';
+      const value = await AsyncStorage.getItem(key)
+      if(value !== null) {
+        // value previously stored
+        console.log("value previously stored: key="+key+", value="+value);
+      } else {
+        console.log("value not stored: "+key);
+      }
+    } catch(e) {
+      // error reading value
+    }
+  }
+
+  storeData = async () => {
+    try {
+      await AsyncStorage.setItem('@storage_Key', 'stored value')
+    } catch (e) {
+      // saving error
+    }
+  }
+
+  removeItem = async () => {
+    try {
+      await AsyncStorage.removeItem('@storage_Key');
+    } catch (e) {
+      // remove error
+    }
+  }
 
   changeScreen(newScreen) {
     console.log("changeScreen(): "+newScreen);
