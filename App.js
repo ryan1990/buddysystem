@@ -10,10 +10,19 @@ import LoginScreen from './components/LoginScreen';
 import CreateUserScreen from './components/CreateUserScreen';
 
 export default class App extends React.Component {
+  loggedInUserStorageKey = '@loggedInUser';
+
   constructor() {
     super();
+
+    let loggedInUserFromStorage = this.getLoggedInUserFromStorage();
+    // CONTINUE:!!!
+    console.log("loggedInUserFromStorage: "+loggedInUserFromStorage);
+
+
     this.state = {
-      screen: "StopwatchScreen" // can be StopwatchScreen, LoginScreen, CreateUserScreen
+      screen: "StopwatchScreen", // can be StopwatchScreen, LoginScreen, CreateUserScreen
+      loggedInUser: ""
     };
 
     this.changeScreenToLogin = this.changeScreenToLogin.bind(this);
@@ -23,6 +32,25 @@ export default class App extends React.Component {
     //this.storeData();
     //this.removeItem();
     //this.getData();
+  }
+
+  // return "" if no user and an email address if it is in storage
+  getLoggedInUserFromStorage = async () => {
+    try {
+      console.log("pre: "+this.loggedInUserStorageKey);
+      const value = await AsyncStorage.getItem(this.loggedInUserStorageKey);
+      console.log("post");
+      if(value !== null) {
+        // value previously stored
+        return value;
+        console.log("value previously stored: key="+this.loggedInUserStorageKey+", value="+value);
+      } else {
+        return "";
+        console.log("value not stored: "+this.loggedInUserStorageKey);
+      }
+    } catch(e) {
+      // error reading value
+    }
   }
 
   // play with AsyncStorage
@@ -80,9 +108,9 @@ export default class App extends React.Component {
         <ScrollView>
           {(() => {
           switch (this.state.screen) {
-            case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreenToLogin} />;
-            case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToCreateUserScreen={this.changeScreenToCreateUser} />;
-            case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToLoginScreen={this.changeScreenToLogin} />;
+            case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreenToLogin} loggedInUser={this.state.loggedInUser} />;
+            case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToCreateUserScreen={this.changeScreenToCreateUser} loggedInUser={this.state.loggedInUser} />;
+            case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToLoginScreen={this.changeScreenToLogin} loggedInUser={this.state.loggedInUser} />;
           }
         })()}
       </ScrollView>

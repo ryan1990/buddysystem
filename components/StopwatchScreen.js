@@ -1,6 +1,7 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
 import React from 'react';
 import { Button, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import UserInfo from './UserInfo';
 
 // Stopwatch page should show email they are logged in as.
 
@@ -62,9 +63,7 @@ export default class StopwatchScreen extends React.Component {
     const { status, runningTime } = this.state;
     return (
       <View>
-        <View style={{ margin: 10 }}>
-          <Button title="Logout" onPress={this.props.goToLoginScreen} />
-        </View>
+        <UserInfo loggedInUser={this.props.loggedInUser} goToLoginScreen={this.props.goToLoginScreen} />
 
         <Text style={styles.titleText}>Time Practiced</Text>
         <Text style={styles.countNumbers}>{this.convertMsToMinutes(runningTime)}</Text>
