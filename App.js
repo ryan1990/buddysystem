@@ -14,7 +14,12 @@ export default class App extends React.Component {
     super();
     this.state = {
       screen: "StopwatchScreen" // can be StopwatchScreen, LoginScreen, CreateUserScreen
-    }; 
+    };
+
+    this.changeScreenToLogin = this.changeScreenToLogin.bind(this);
+    this.changeScreenToStopwatch = this.changeScreenToStopwatch.bind(this);
+    this.changeScreenToCreateUser = this.changeScreenToCreateUser.bind(this);
+
     //this.storeData();
     //this.removeItem();
     //this.getData();
@@ -56,6 +61,18 @@ export default class App extends React.Component {
     console.log("changeScreen(): "+newScreen);
     this.setState({screen: newScreen});
   }
+
+  changeScreenToLogin() {
+    this.changeScreen("LoginScreen");
+  }
+
+  changeScreenToStopwatch() {
+    this.changeScreen("StopwatchScreen");
+  }
+  
+  changeScreenToCreateUser() {
+    this.changeScreen("CreateUserScreen");
+  }
   
   render() {
     return (
@@ -63,9 +80,9 @@ export default class App extends React.Component {
         <ScrollView>
           {(() => {
           switch (this.state.screen) {
-            case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreen.bind(this, "LoginScreen")} />;
-            case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} goToCreateUserScreen={this.changeScreen.bind(this, "CreateUserScreen")} />;
-            case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreen.bind(this, "StopwatchScreen")} goToLoginScreen={this.changeScreen.bind(this, "LoginScreen")} />;
+            case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreenToLogin} />;
+            case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToCreateUserScreen={this.changeScreenToCreateUser} />;
+            case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToLoginScreen={this.changeScreenToLogin} />;
           }
         })()}
       </ScrollView>

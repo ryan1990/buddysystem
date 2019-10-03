@@ -16,6 +16,8 @@ export default class LoginScreen extends React.Component {
     this.state = {
       emailAddress: ''
     };
+
+    this.login = this.login.bind(this);
   }
 
   login() {
@@ -53,7 +55,7 @@ export default class LoginScreen extends React.Component {
           />
         </View>
         <View style={{ margin: 10 }}>
-          <Button title="Login" onPress={this.login.bind(this)} />
+          <Button title="Login" onPress={this.login} />
         </View>
         <View style={{ margin: 10 }}>        
           <Button title="Create new account" onPress={this.props.goToCreateUserScreen} />
