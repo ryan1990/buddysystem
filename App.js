@@ -15,75 +15,133 @@ export default class App extends React.Component {
   constructor() {
     super();
 
-    let loggedInUserFromStorage = this.getLoggedInUserFromStorage();
-    // CONTINUE:!!!
-    console.log("loggedInUserFromStorage: "+loggedInUserFromStorage);
+    // let loggedInUserFromStorage;
+    // this.getLoggedInUserFromStorage().then(console.log("ALL DONE"));
+    // console.log("loggedInUserFromStorage: "+loggedInUserFromStorage);
 
+    //let loggedInUser = this.getLoggedInUser();
 
     this.state = {
       screen: "StopwatchScreen", // can be StopwatchScreen, LoginScreen, CreateUserScreen
-      loggedInUser: ""
+      loggedInUser: "blank"
     };
 
     this.changeScreenToLogin = this.changeScreenToLogin.bind(this);
     this.changeScreenToStopwatch = this.changeScreenToStopwatch.bind(this);
     this.changeScreenToCreateUser = this.changeScreenToCreateUser.bind(this);
-
-    //this.storeData();
-    //this.removeItem();
-    //this.getData();
   }
 
-  // return "" if no user and an email address if it is in storage
-  getLoggedInUserFromStorage = async () => {
-    try {
-      console.log("pre: "+this.loggedInUserStorageKey);
-      const value = await AsyncStorage.getItem(this.loggedInUserStorageKey);
-      console.log("post");
-      if(value !== null) {
-        // value previously stored
-        return value;
-        console.log("value previously stored: key="+this.loggedInUserStorageKey+", value="+value);
-      } else {
-        return "";
-        console.log("value not stored: "+this.loggedInUserStorageKey);
-      }
-    } catch(e) {
-      // error reading value
+  // when app starts, it checks storage to see if Key exists and sets state.loggedInUser to Value from storage if exists, else set to "". Key = loggedInUserStorageKey, Value = "email@test.com"
+  // logout: set state to "" AND remove key from storage. Key = loggedInUserStorageKey, Value = "email@test.com"
+  // login: create key/value in storage and set state to the value. Key = loggedInUserStorageKey. Value = "email@test.com"
+  // create new account: after confimed that email address is in AWS as the account, perform login with value set to the email address.
+  componentDidMount = () => AsyncStorage.getItem(this.loggedInUserStorageKey).then((value) => {
+    console.log("Mount");
+    if (value !== null) { // key for user email address exists, indicating they are logged in
+      this.setState({ loggedInUser: value });
+    } else { // no key for user email address exists, indicating no one is logged in
+      this.setState({ loggedInUser: "" });
     }
+
+    // TEST LOGIN/LOGOUT WITH THIS:
+    //this.loginUser.call(this, "test333Email555@ggg.com");
+    //this.logoutUser.call(this);
+  });
+
+  // create key/value in storage and set state to emailAddress
+  loginUser(emailAddress) {
+    this.storeUserEmailAddress(emailAddress);//.then(() => this.setState({ loggedInUser: emailAddress }));
+    this.setState({ loggedInUser: emailAddress })
   }
 
-  // play with AsyncStorage
-  getData = async () => {
-    try {
-      let key = '@storage_Key';
-      const value = await AsyncStorage.getItem(key)
-      if(value !== null) {
-        // value previously stored
-        console.log("value previously stored: key="+key+", value="+value);
-      } else {
-        console.log("value not stored: "+key);
-      }
-    } catch(e) {
-      // error reading value
-    }
+  storeUserEmailAddress(emailAddress) {
+    AsyncStorage.setItem(this.loggedInUserStorageKey, emailAddress);
   }
 
-  storeData = async () => {
-    try {
-      await AsyncStorage.setItem('@storage_Key', 'stored value')
-    } catch (e) {
-      // saving error
-    }
+  logoutUser() {
+    this.removeUserEmailAddressFromStorage();
+    this.setState({ loggedInUser: "" });
   }
 
-  removeItem = async () => {
-    try {
-      await AsyncStorage.removeItem('@storage_Key');
-    } catch (e) {
-      // remove error
-    }
+  // remove the key/value pair with key = this.loggedInUserStorageKey from storage
+  removeUserEmailAddressFromStorage() {
+    AsyncStorage.removeItem(this.loggedInUserStorageKey);
   }
+
+  // async getLoggedInUser() {
+  //   let p = this.getLoggedInUserFromStorage();
+  //   let pResult = await p;
+
+  //   return pResult;
+  // }
+
+  // // return "" if no user and an email address if it is in storage
+  // async getLoggedInUserFromStorage() {
+  //   try {
+  //     let value = await AsyncStorage.getItem(this.loggedInUserStorageKey);
+  //     if(value !== null) {
+  //       // value previously stored
+  //       console.log("value previously stored: key="+this.loggedInUserStorageKey+", value="+value);
+  //       return value;
+  //     } else {
+  //       console.log("value not stored: "+this.loggedInUserStorageKey);
+  //       // return "";
+  //       return "emailAddressFAKE@gmail.com"
+  //     }
+  //   } catch(e) {
+  //     // error reading value
+  //   }
+  // }
+
+  // getLoggedInUserFromStorage = async () => {
+  //   try {
+  //     console.log("pre: "+this.loggedInUserStorageKey);
+  //     let value = await AsyncStorage.getItem(this.loggedInUserStorageKey);
+  //     console.log("post");
+  //     if(value !== null) {
+  //       // value previously stored
+  //       console.log("value previously stored: key="+this.loggedInUserStorageKey+", value="+value);
+  //       return value;
+  //     } else {
+  //       console.log("value not stored: "+this.loggedInUserStorageKey);
+  //       return "";
+  //     }
+  //   } catch(e) {
+  //     // error reading value
+  //   }
+  // }
+
+  // // play with AsyncStorage
+  // getData = async () => {
+  //   try {
+  //     let key = '@storage_Key';
+  //     const value = await AsyncStorage.getItem(key)
+  //     if(value !== null) {
+  //       // value previously stored
+  //       console.log("value previously stored: key="+key+", value="+value);
+  //     } else {
+  //       console.log("value not stored: "+key);
+  //     }
+  //   } catch(e) {
+  //     // error reading value
+  //   }
+  // }
+
+  // storeData = async () => {
+  //   try {
+  //     await AsyncStorage.setItem('@storage_Key', 'stored value')
+  //   } catch (e) {
+  //     // saving error
+  //   }
+  // }
+
+  // removeItem = async () => {
+  //   try {
+  //     await AsyncStorage.removeItem('@storage_Key');
+  //   } catch (e) {
+  //     // remove error
+  //   }
+  // }
 
   changeScreen(newScreen) {
     console.log("changeScreen(): "+newScreen);
@@ -97,11 +155,11 @@ export default class App extends React.Component {
   changeScreenToStopwatch() {
     this.changeScreen("StopwatchScreen");
   }
-  
+
   changeScreenToCreateUser() {
     this.changeScreen("CreateUserScreen");
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
