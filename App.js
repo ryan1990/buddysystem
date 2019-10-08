@@ -8,6 +8,7 @@ import Constants from 'expo-constants';
 import StopwatchScreen from './components/StopwatchScreen';
 import LoginScreen from './components/LoginScreen';
 import CreateUserScreen from './components/CreateUserScreen';
+import UpdateUserScreen from './components/UpdateUserScreen';
 
 export default class App extends React.Component {
   loggedInUserStorageKey = '@loggedInUser';
@@ -22,13 +23,14 @@ export default class App extends React.Component {
     //let loggedInUser = this.getLoggedInUser();
 
     this.state = {
-      screen: "LoginScreen", // can be StopwatchScreen, LoginScreen, CreateUserScreen
+      screen: "LoginScreen", // can be StopwatchScreen, LoginScreen, CreateUserScreen, UpdateUserScreen
       loggedInUser: "blank"
     };
 
     this.changeScreenToLogin = this.changeScreenToLogin.bind(this);
     this.changeScreenToStopwatch = this.changeScreenToStopwatch.bind(this);
     this.changeScreenToCreateUser = this.changeScreenToCreateUser.bind(this);
+    this.changeScreenToUpdateUser = this.changeScreenToUpdateUser.bind(this);
     this.loginUser = this.loginUser.bind(this);
     this.logoutUser = this.logoutUser.bind(this);
   }
@@ -84,15 +86,20 @@ export default class App extends React.Component {
     this.changeScreen("CreateUserScreen");
   }
 
+  changeScreenToUpdateUser() {
+    this.changeScreen("UpdateUserScreen");
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <ScrollView>
           {(() => {
           switch (this.state.screen) {
-            case "StopwatchScreen":   return <StopwatchScreen logoutUser={ () => {this.logoutUser(); this.changeScreenToLogin()} } loggedInUser={this.state.loggedInUser} />;
-            case "LoginScreen":   return <LoginScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToCreateUserScreen={this.changeScreenToCreateUser} loggedInUser={this.state.loggedInUser} />;
-            case "CreateUserScreen":   return <CreateUserScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToLoginScreen={this.changeScreenToLogin} loggedInUser={this.state.loggedInUser} />;
+            case "StopwatchScreen":   return <StopwatchScreen logoutUser={ () => {this.logoutUser(); this.changeScreenToLogin()} } goToUpdateUserScreen={this.changeScreenToUpdateUser} loggedInUser={this.state.loggedInUser} />;
+            case "LoginScreen":   return <LoginScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToCreateUserScreen={this.changeScreenToCreateUser} />;
+            case "CreateUserScreen":   return <CreateUserScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToLoginScreen={this.changeScreenToLogin} />;
+            case "UpdateUserScreen":  return <UpdateUserScreen logoutUser={ () => {this.logoutUser(); this.changeScreenToLogin()} } goToStopwatchScreen={this.changeScreenToStopwatch} loggedInUser={this.state.loggedInUser} />;
           }
         })()}
       </ScrollView>
