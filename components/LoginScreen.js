@@ -49,7 +49,7 @@ export default class LoginScreen extends React.Component {
         <View style={{ margin: 10 }}>        
           <TextInput
             value={this.state.emailAddress}
-            onChangeText={(emailAddress) => this.setState({ emailAddress })}
+            onChangeText={(emailAddress) => this.setState({ emailAddress: emailAddress.trim() })}
             placeholder="Email address"
             style={{height: 40, borderColor: 'gray', borderWidth: 1 }}
           />

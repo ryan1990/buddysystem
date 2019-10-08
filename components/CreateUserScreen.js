@@ -1,13 +1,8 @@
-// React Native Mobile time tracker app used to capture music practice sessions.
 import * as React from 'react';
 import { Alert, Button, Picker, Text, TextInput, View, StyleSheet } from 'react-native';
 import { validateEmailAddress, validateUsesOnlyDigitCharacters } from './Validator';
 
 // chance to enter email to create new user account. If it exists, tell them and prompt to retry,
-// take them to Stopwatch page.
-// Stopwatch page should show email they are logged in as.
-// ALSO, have return to login button?
-
 
 export default class CreateUserScreen extends React.Component {
   constructor() {
@@ -19,7 +14,6 @@ export default class CreateUserScreen extends React.Component {
       phoneNumber: '',
       emailAddress: '',
       smartGoal: '',
-      //commitment: '',// remove?
       minutesPerDay: '',
       daysPerWeek: '4'
     };
@@ -31,7 +25,6 @@ export default class CreateUserScreen extends React.Component {
         && this.validateContainsText(this.state.lastName)
         && this.validateContainsText(this.state.phoneNumber)
         && this.validateContainsText(this.state.smartGoal)
-        //&& this.validateContainsText(this.state.commitment)
         )) {
       alertMethod("Please fill out all text boxes.");
       return false;
@@ -122,7 +115,7 @@ export default class CreateUserScreen extends React.Component {
           <View style={{flex: 1}}>
             <TextInput style={{justifyContent: 'flex-end'}}
               value={this.state.emailAddress}
-              onChangeText={(emailAddress) => this.setState({ emailAddress })}
+              onChangeText={(emailAddress) => this.setState({ emailAddress: emailAddress.trim() })}
               placeholder="Email address"
               style={{flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }}
             />
@@ -138,16 +131,6 @@ export default class CreateUserScreen extends React.Component {
           style={{ borderColor: 'gray', borderWidth: 1, margin: 10 }}
           multiline={true}
         />
-        
-        {/* <Text style={{ margin: 10 }}>Make a commitment that creates for yourself the time, place, and activity you will practice regularly to reach your goal. Example: I will practice piano for 10 minutes each weekday. My Commitment:</Text>
-        
-        <TextInput
-          value={this.state.commitment}
-          onChangeText={(commitment) => this.setState({ commitment })}
-          placeholder="Commitment"
-          style={{ borderColor: 'gray', borderWidth: 1, margin: 10 }}
-          multiline={true}
-        /> */}
 
         {/* I will practice (TextInput) minutes per day on (dropdown 1-7) days each week. */}
         
@@ -193,7 +176,6 @@ export default class CreateUserScreen extends React.Component {
           <Button
             title="Create Account"
             onPress={() => {
-                // FIX THIS!!!!
                 let validInputs = this.validateInputs(Alert.alert);
                 if (!validInputs) {
                   return;
