@@ -63,7 +63,7 @@ export default class StopwatchScreen extends React.Component {
     const { status, runningTime } = this.state;
     return (
       <View>
-        <UserInfo loggedInUser={this.props.loggedInUser} goToLoginScreen={this.props.goToLoginScreen} />
+        <UserInfo loggedInUser={this.props.loggedInUser} logoutUser={this.props.logoutUser} />
 
         <Text style={styles.titleText}>Time Practiced</Text>
         <Text style={styles.countNumbers}>{this.convertMsToMinutes(runningTime)}</Text>

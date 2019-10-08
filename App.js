@@ -22,13 +22,15 @@ export default class App extends React.Component {
     //let loggedInUser = this.getLoggedInUser();
 
     this.state = {
-      screen: "StopwatchScreen", // can be StopwatchScreen, LoginScreen, CreateUserScreen
+      screen: "LoginScreen", // can be StopwatchScreen, LoginScreen, CreateUserScreen
       loggedInUser: "blank"
     };
 
     this.changeScreenToLogin = this.changeScreenToLogin.bind(this);
     this.changeScreenToStopwatch = this.changeScreenToStopwatch.bind(this);
     this.changeScreenToCreateUser = this.changeScreenToCreateUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
+    this.logoutUser = this.logoutUser.bind(this);
   }
 
   // when app starts, it checks storage to see if Key exists and sets state.loggedInUser to Value from storage if exists, else set to "". Key = loggedInUserStorageKey, Value = "email@test.com"
@@ -36,22 +38,19 @@ export default class App extends React.Component {
   // login: create key/value in storage and set state to the value. Key = loggedInUserStorageKey. Value = "email@test.com"
   // create new account: after confimed that email address is in AWS as the account, perform login with value set to the email address.
   componentDidMount = () => AsyncStorage.getItem(this.loggedInUserStorageKey).then((value) => {
-    console.log("Mount");
     if (value !== null) { // key for user email address exists, indicating they are logged in
       this.setState({ loggedInUser: value });
+      this.changeScreenToStopwatch();
     } else { // no key for user email address exists, indicating no one is logged in
       this.setState({ loggedInUser: "" });
+      this.changeScreenToLogin();
     }
-
-    // TEST LOGIN/LOGOUT WITH THIS:
-    //this.loginUser.call(this, "test333Email555@ggg.com");
-    //this.logoutUser.call(this);
   });
 
   // create key/value in storage and set state to emailAddress
   loginUser(emailAddress) {
-    this.storeUserEmailAddress(emailAddress);//.then(() => this.setState({ loggedInUser: emailAddress }));
-    this.setState({ loggedInUser: emailAddress })
+    this.storeUserEmailAddress(emailAddress);
+    this.setState({ loggedInUser: emailAddress });
   }
 
   storeUserEmailAddress(emailAddress) {
@@ -67,81 +66,6 @@ export default class App extends React.Component {
   removeUserEmailAddressFromStorage() {
     AsyncStorage.removeItem(this.loggedInUserStorageKey);
   }
-
-  // async getLoggedInUser() {
-  //   let p = this.getLoggedInUserFromStorage();
-  //   let pResult = await p;
-
-  //   return pResult;
-  // }
-
-  // // return "" if no user and an email address if it is in storage
-  // async getLoggedInUserFromStorage() {
-  //   try {
-  //     let value = await AsyncStorage.getItem(this.loggedInUserStorageKey);
-  //     if(value !== null) {
-  //       // value previously stored
-  //       console.log("value previously stored: key="+this.loggedInUserStorageKey+", value="+value);
-  //       return value;
-  //     } else {
-  //       console.log("value not stored: "+this.loggedInUserStorageKey);
-  //       // return "";
-  //       return "emailAddressFAKE@gmail.com"
-  //     }
-  //   } catch(e) {
-  //     // error reading value
-  //   }
-  // }
-
-  // getLoggedInUserFromStorage = async () => {
-  //   try {
-  //     console.log("pre: "+this.loggedInUserStorageKey);
-  //     let value = await AsyncStorage.getItem(this.loggedInUserStorageKey);
-  //     console.log("post");
-  //     if(value !== null) {
-  //       // value previously stored
-  //       console.log("value previously stored: key="+this.loggedInUserStorageKey+", value="+value);
-  //       return value;
-  //     } else {
-  //       console.log("value not stored: "+this.loggedInUserStorageKey);
-  //       return "";
-  //     }
-  //   } catch(e) {
-  //     // error reading value
-  //   }
-  // }
-
-  // // play with AsyncStorage
-  // getData = async () => {
-  //   try {
-  //     let key = '@storage_Key';
-  //     const value = await AsyncStorage.getItem(key)
-  //     if(value !== null) {
-  //       // value previously stored
-  //       console.log("value previously stored: key="+key+", value="+value);
-  //     } else {
-  //       console.log("value not stored: "+key);
-  //     }
-  //   } catch(e) {
-  //     // error reading value
-  //   }
-  // }
-
-  // storeData = async () => {
-  //   try {
-  //     await AsyncStorage.setItem('@storage_Key', 'stored value')
-  //   } catch (e) {
-  //     // saving error
-  //   }
-  // }
-
-  // removeItem = async () => {
-  //   try {
-  //     await AsyncStorage.removeItem('@storage_Key');
-  //   } catch (e) {
-  //     // remove error
-  //   }
-  // }
 
   changeScreen(newScreen) {
     console.log("changeScreen(): "+newScreen);
@@ -166,9 +90,9 @@ export default class App extends React.Component {
         <ScrollView>
           {(() => {
           switch (this.state.screen) {
-            case "StopwatchScreen":   return <StopwatchScreen goToLoginScreen={this.changeScreenToLogin} loggedInUser={this.state.loggedInUser} />;
-            case "LoginScreen":   return <LoginScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToCreateUserScreen={this.changeScreenToCreateUser} loggedInUser={this.state.loggedInUser} />;
-            case "CreateUserScreen":   return <CreateUserScreen goToStopwatchScreen={this.changeScreenToStopwatch} goToLoginScreen={this.changeScreenToLogin} loggedInUser={this.state.loggedInUser} />;
+            case "StopwatchScreen":   return <StopwatchScreen logoutUser={ () => {this.logoutUser(); this.changeScreenToLogin()} } loggedInUser={this.state.loggedInUser} />;
+            case "LoginScreen":   return <LoginScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToCreateUserScreen={this.changeScreenToCreateUser} loggedInUser={this.state.loggedInUser} />;
+            case "CreateUserScreen":   return <CreateUserScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToLoginScreen={this.changeScreenToLogin} loggedInUser={this.state.loggedInUser} />;
           }
         })()}
       </ScrollView>

@@ -8,7 +8,7 @@ export default function UserInfo(props) {
           <Text>Hello {props.loggedInUser}</Text>
         </View>
         <View style={{ margin: 10 }}>
-          <Button title="Logout" onPress={props.goToLoginScreen} />
+          <Button title="Logout" onPress={props.logoutUser} />
         </View>
       </View>
     )

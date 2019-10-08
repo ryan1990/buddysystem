@@ -199,12 +199,12 @@ export default class CreateUserScreen extends React.Component {
                   return;
                 }
 
-                let userExists = false;//true; // will make api call to backend
+                let userExists = false;//true; // will make api call to backend // make sure we call with all lower-case email address characters!
 
                 if (!userExists) {
                   // TODO: create this new user in backend
                   // TODO: let app know we are logged in with this user!
-                  this.props.goToStopwatchScreen();
+                  this.props.loginUser(this.state.emailAddress);
                   //Alert.alert("Create User button clicked in !userExists condition");
                 } else {
                   Alert.alert("An account with this email address already exists.");

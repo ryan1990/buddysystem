@@ -31,7 +31,7 @@ export default class LoginScreen extends React.Component {
     let userExists = true; // will make api call to backend
 
     if (userExists) {
-      this.props.goToStopwatchScreen(); // show user logged in
+      this.props.loginUser(this.state.emailAddress); // show user logged in
     } else {
       Alert.alert("There is no account associated with this email address. Check your spelling or click Create new account.");
       // how can user update their goal/commitment later?
