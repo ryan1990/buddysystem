@@ -9,9 +9,6 @@ export default class CreateUserScreen extends React.Component {
     super();
 
     this.state = {
-      firstName: '',
-      lastName: '',
-      phoneNumber: '',
       emailAddress: '',
       smartGoal: '',
       minutesPerDay: '',
@@ -21,11 +18,7 @@ export default class CreateUserScreen extends React.Component {
 
   // injecting dependency for alert method
   validateInputs(alertMethod) {
-    if (!(this.validateContainsText(this.state.firstName)
-        && this.validateContainsText(this.state.lastName)
-        && this.validateContainsText(this.state.phoneNumber)
-        && this.validateContainsText(this.state.smartGoal)
-        )) {
+    if (!this.validateContainsText(this.state.smartGoal)) {
       alertMethod("Please fill out all text boxes.");
       return false;
     }
@@ -66,48 +59,6 @@ export default class CreateUserScreen extends React.Component {
   render() {
     return (
       <View>
-        <View style={{flexDirection:"row", height: 30, margin: 10 }}>
-          <View style={{flex: 1}}>
-            <Text style={{justifyContent: 'flex-start'}}>First Name:</Text>
-          </View>
-          <View style={{flex: 1}}>
-            <TextInput style={{justifyContent: 'flex-end'}}
-              value={this.state.firstName}
-              onChangeText={(firstName) => this.setState({ firstName })}
-              placeholder="First Name"
-              style={{flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }}
-            />
-          </View>
-        </View>
-
-        <View style={{flexDirection:"row", height: 30, margin: 10 }}>
-          <View style={{flex: 1}}>
-            <Text style={{justifyContent: 'flex-start'}}>Last Name:</Text>
-          </View>
-          <View style={{flex: 1}}>
-            <TextInput style={{justifyContent: 'flex-end'}}
-              value={this.state.lastName}
-              onChangeText={(lastName) => this.setState({ lastName })}
-              placeholder="Last Name"
-              style={{flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }}
-            />
-          </View>
-        </View>
-
-        <View style={{flexDirection:"row", height: 30, margin: 10 }}>
-          <View style={{flex: 1}}>
-            <Text style={{justifyContent: 'flex-start'}}>Phone number:</Text>
-          </View>
-          <View style={{flex: 1}}>
-            <TextInput style={{justifyContent: 'flex-end'}}
-              value={this.state.phoneNumber}
-              onChangeText={(phoneNumber) => this.setState({ phoneNumber })}
-              placeholder="Phone number"
-              style={{flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }}
-            />
-          </View>
-        </View>
-
         <View style={{flexDirection:"row", height: 30, margin: 10 }}>
           <View style={{flex: 1}}>
             <Text style={{justifyContent: 'flex-start'}}>Email address:</Text>
