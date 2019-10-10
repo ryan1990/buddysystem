@@ -4,6 +4,7 @@ import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 // should remove email-validator from file system if not used!
 import { validateEmailAddress } from './Validator';
 import axios from 'axios';
+import ApiService from './../tests/ApiService';
 
 // SEE THIS!!!
 //https://code.tutsplus.com/tutorials/common-react-native-app-layouts-login-page--cms-27639
@@ -52,6 +53,12 @@ export default class LoginScreen extends React.Component {
 
   // make call to backend to see if user exists
   userExistsInBackend(user) {
+    api = new ApiService(axios);
+    api.DoAxiosCall((response) => {
+      return console.log("callback. Response=" + response.status);
+    });
+
+
     console.log("userExistsInBackend() "+user);
     axios.get('https://jsonplaceholder.typicode.com/posts/1')
     .then(response => {
