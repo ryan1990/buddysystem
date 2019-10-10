@@ -3,6 +3,7 @@ import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 //import * as EmailValidator from 'email-validator';
 // should remove email-validator from file system if not used!
 import { validateEmailAddress } from './Validator';
+import axios from 'axios';
 
 // SEE THIS!!!
 //https://code.tutsplus.com/tutorials/common-react-native-app-layouts-login-page--cms-27639
@@ -28,16 +29,41 @@ export default class LoginScreen extends React.Component {
       return;
     }
 
-    let userExists = true; // will make api call to backend
+    //
+    //
+    // use await??
+    //
+    //
+    //READ:
+    //https://medium.com/react-native-training/learning-to-test-react-native-with-jest-part-4-1d6df49866b1
+    let userExists = this.userExistsInBackend(emailAddress); //= true; // will make api call to backend
 
     if (userExists) {
       this.props.loginUser(this.state.emailAddress); // show user logged in
-    } else {
+    } else if (userExists === false) {
       Alert.alert("There is no account associated with this email address. Check your spelling or click Create new account.");
       // how can user update their goal/commitment later?
       // separate account creation for timing from create/update of commitment/goal?
       // have new screen that logged in user can use to View AND Update commitment/goal!
+    } else { // userExists === null
+      Alert.alert("Error reaching server, check your internet connection.");
     }
+  }
+
+  // make call to backend to see if user exists
+  userExistsInBackend(user) {
+    console.log("userExistsInBackend() "+user);
+    axios.get('https://jsonplaceholder.typicode.com/posts/1')
+    .then(response => {
+      console.log(response.status);
+      return true;
+      //this.setState({posts: response.data});
+      // if response says they exist, return true, else false
+    })
+    .catch(error =>
+      console.log(error));
+      //this.setState({errorMsg: 'Error retrieving data.'});
+      return null;
   }
   
   render() {
