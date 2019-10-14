@@ -3,7 +3,6 @@ import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 //import * as EmailValidator from 'email-validator';
 // should remove email-validator from file system if not used!
 import { validateEmailAddress } from './Validator';
-import axios from 'axios';
 import ApiService from './../tests/ApiService';
 
 // SEE THIS!!!
@@ -36,6 +35,8 @@ export default class LoginScreen extends React.Component {
     //
     //
     //READ:
+    //https://snack.expo.io/@ryan12/223b0a
+    //https://stackoverflow.com/questions/46750263/react-js-how-to-do-service-layer-call
     //https://medium.com/react-native-training/learning-to-test-react-native-with-jest-part-4-1d6df49866b1
     let userExists = this.userExistsInBackend(emailAddress); //= true; // will make api call to backend
 
@@ -52,25 +53,42 @@ export default class LoginScreen extends React.Component {
   }
 
   // make call to backend to see if user exists
-  userExistsInBackend(user) {
-    api = new ApiService(axios);
-    api.DoAxiosCall((response) => {
-      return console.log("callback. Response=" + response.status);
-    });
+  async userExistsInBackend(user) {
+    api = new ApiService();
+    let response = await api.DoAxiosCallFake();
+    console.log("Finished DoAxiosCall()");
+
+    let resJson = JSON.stringify(response);
+    console.log("resJson="+resJson);
 
 
-    console.log("userExistsInBackend() "+user);
-    axios.get('https://jsonplaceholder.typicode.com/posts/1')
-    .then(response => {
-      console.log(response.status);
-      return true;
-      //this.setState({posts: response.data});
-      // if response says they exist, return true, else false
-    })
-    .catch(error =>
-      console.log(error));
-      //this.setState({errorMsg: 'Error retrieving data.'});
-      return null;
+
+    // api.DoAxiosCall((response) => {    
+    //   //return console.log("callback. Response=" + response.status);
+    //   if (response.status == 200) {
+    //     console.log("TRUE!!");
+    //     let resJson = JSON.stringify(response);
+    //     //console.log(resJson);
+    //     return true;
+    //   }
+    //   // if response blah blah, return true/false/null
+    // });
+    // we will get resonse object here
+    // when call comes back successful, we change App state of screen to stopwatch and perform login steps
+
+
+    // console.log("userExistsInBackend() "+user);
+    // axios.get('https://jsonplaceholder.typicode.com/posts/1')
+    // .then(response => {
+    //   console.log(response.status);
+    //   return true;
+    //   //this.setState({posts: response.data});
+    //   // if response says they exist, return true, else false
+    // })
+    // .catch(error =>
+    //   console.log(error));
+    //   //this.setState({errorMsg: 'Error retrieving data.'});
+    //   return null;
   }
   
   render() {
