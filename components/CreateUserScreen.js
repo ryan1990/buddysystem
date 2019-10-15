@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Alert, Button, Picker, Text, TextInput, View, StyleSheet } from 'react-native';
 import { validateAtLeast4Characters, validateUsesOnlyDigitCharacters } from './Validator';
+import ApiService from './../tests/ApiService';
 
 // chance to enter username to create new user account. If it exists, tell them and prompt to retry,
 
@@ -54,6 +55,18 @@ export default class CreateUserScreen extends React.Component {
 
   validateUsername(input) {
     return validateAtLeast4Characters(input);
+  }
+
+  // make call to backend to see if user exists
+  async userExistsInBackend(user) {
+    api = new ApiService();
+    let response = await api.UserExistsFakeFalse();
+
+    try {
+      return response.data.userIdExists;
+    } catch(error) {
+      return null;
+    }
   }
 
   render() {
@@ -126,13 +139,15 @@ export default class CreateUserScreen extends React.Component {
         <View style={{ margin: 10 }}>
           <Button
             title="Create Account"
-            onPress={() => {
+            onPress={ async () => {
+                const { username } = this.state;
+                
                 let validInputs = this.validateInputs(Alert.alert);
                 if (!validInputs) {
                   return;
                 }
 
-                let userExists = false;//true; // will make api call to backend // make sure we call with all lower-case characters!
+                let userExists = await this.userExistsInBackend(username); // make sure we call with all lower-case characters!
 
                 if (!userExists) {
                   // TODO: create this new user in backend

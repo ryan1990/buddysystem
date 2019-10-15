@@ -31,7 +31,7 @@ export default class LoginScreen extends React.Component {
     //https://snack.expo.io/@ryan12/223b0a
     //https://stackoverflow.com/questions/46750263/react-js-how-to-do-service-layer-call
     //https://medium.com/react-native-training/learning-to-test-react-native-with-jest-part-4-1d6df49866b1
-    let userExists = await this.userExistsInBackend(username); //= true; // will make api call to backend
+    let userExists = await this.userExistsInBackend(username);
 
     if (userExists) {
       this.props.loginUser(this.state.username); // show user logged in
@@ -52,43 +52,6 @@ export default class LoginScreen extends React.Component {
     } catch(error) {
       return null;
     }
-    // console.log("userIdExists: "+answer);
-
-    // if (response.data.userIdExists) {
-    //   return true;
-    // }
-
-    // let resJson = JSON.stringify(response);
-    // console.log("resJson="+resJson);
-
-
-
-    // api.DoAxiosCall((response) => {    
-    //   //return console.log("callback. Response=" + response.status);
-    //   if (response.status == 200) {
-    //     console.log("TRUE!!");
-    //     let resJson = JSON.stringify(response);
-    //     //console.log(resJson);
-    //     return true;
-    //   }
-    //   // if response blah blah, return true/false/null
-    // });
-    // we will get resonse object here
-    // when call comes back successful, we change App state of screen to stopwatch and perform login steps
-
-
-    // console.log("userExistsInBackend() "+user);
-    // axios.get('https://jsonplaceholder.typicode.com/posts/1')
-    // .then(response => {
-    //   console.log(response.status);
-    //   return true;
-    //   //this.setState({posts: response.data});
-    //   // if response says they exist, return true, else false
-    // })
-    // .catch(error =>
-    //   console.log(error));
-    //   //this.setState({errorMsg: 'Error retrieving data.'});
-    //   return null;
   }
   
   render() {
