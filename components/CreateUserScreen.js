@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Alert, Button, Picker, Text, TextInput, View, StyleSheet } from 'react-native';
-import { validateEmailAddress, validateUsesOnlyDigitCharacters } from './Validator';
+import { validateAtLeast4Characters, validateUsesOnlyDigitCharacters } from './Validator';
 
-// chance to enter email to create new user account. If it exists, tell them and prompt to retry,
+// chance to enter username to create new user account. If it exists, tell them and prompt to retry,
 
 export default class CreateUserScreen extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      emailAddress: '',
+      username: '',
       smartGoal: '',
       minutesPerDay: '',
       daysPerWeek: '4'
@@ -22,8 +22,8 @@ export default class CreateUserScreen extends React.Component {
       alertMethod("Please fill out all text boxes.");
       return false;
     }
-    if (!(this.validateEmail(this.state.emailAddress))) {
-      alertMethod("Please enter a valid email address.");
+    if (!(this.validateUsername(this.state.username))) {
+      alertMethod("Please enter a username with at least 4 characters.");
       return false;      
     }
     if (!(this.validateMinutes(this.state.minutesPerDay))) {
@@ -52,8 +52,8 @@ export default class CreateUserScreen extends React.Component {
     return true;
   }
 
-  validateEmail(input) {
-    return validateEmailAddress(input);
+  validateUsername(input) {
+    return validateAtLeast4Characters(input);
   }
 
   render() {
@@ -61,13 +61,13 @@ export default class CreateUserScreen extends React.Component {
       <View>
         <View style={{flexDirection:"row", height: 30, margin: 10 }}>
           <View style={{flex: 1}}>
-            <Text style={{justifyContent: 'flex-start'}}>Email address:</Text>
+            <Text style={{justifyContent: 'flex-start'}}>Username:</Text>
           </View>
           <View style={{flex: 1}}>
             <TextInput style={{justifyContent: 'flex-end'}}
-              value={this.state.emailAddress}
-              onChangeText={(emailAddress) => this.setState({ emailAddress: emailAddress.trim() })}
-              placeholder="Email address"
+              value={this.state.username}
+              onChangeText={(username) => this.setState({ username: username.trim() })} // save as lowercase!!!!!
+              placeholder="Username"
               style={{flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }}
             />
           </View>
@@ -132,15 +132,15 @@ export default class CreateUserScreen extends React.Component {
                   return;
                 }
 
-                let userExists = false;//true; // will make api call to backend // make sure we call with all lower-case email address characters!
+                let userExists = false;//true; // will make api call to backend // make sure we call with all lower-case characters!
 
                 if (!userExists) {
                   // TODO: create this new user in backend
                   // TODO: let app know we are logged in with this user!
-                  this.props.loginUser(this.state.emailAddress);
+                  this.props.loginUser(this.state.username);
                   //Alert.alert("Create User button clicked in !userExists condition");
                 } else {
-                  Alert.alert("An account with this email address already exists.");
+                  Alert.alert("An account with this Username already exists.");
                 }
               }
             }

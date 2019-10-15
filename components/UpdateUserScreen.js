@@ -2,18 +2,15 @@
 
 
 import * as React from 'react';
-import { Alert, Button, Picker, Text, TextInput, View, StyleSheet } from 'react-native';
-import { validateEmailAddress, validateUsesOnlyDigitCharacters } from './Validator';
+import { Button, Picker, Text, TextInput, View } from 'react-native';
+import { validateUsesOnlyDigitCharacters } from './Validator';
 import UserInfo from './UserInfo';
-
-// chance to enter email to create new user account. If it exists, tell them and prompt to retry,
 
 export default class UpdateUserScreen extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      // emailAddress: '',
       smartGoal: '',
       minutesPerDay: '',
       daysPerWeek: '4'
@@ -25,10 +22,6 @@ export default class UpdateUserScreen extends React.Component {
     if (!this.validateContainsText(this.state.smartGoal)) {
       alertMethod("Please fill out all text boxes.");
       return false;
-    }
-    if (!(this.validateEmail(this.state.emailAddress))) {
-      alertMethod("Please enter a valid email address.");
-      return false;      
     }
     if (!(this.validateMinutes(this.state.minutesPerDay))) {
       alertMethod("Please enter a valid positive number for minutes per day.");
@@ -54,10 +47,6 @@ export default class UpdateUserScreen extends React.Component {
       return false;
     }
     return true;
-  }
-
-  validateEmail(input) {
-    return validateEmailAddress(input);
   }
 
   render() {

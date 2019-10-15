@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import UserInfo from './UserInfo';
 
-// Stopwatch page should show email they are logged in as.
+// Stopwatch page should show username they are logged in as.
 
 // Time tracker component
 export default class StopwatchScreen extends React.Component {

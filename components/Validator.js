@@ -1,3 +1,11 @@
+var validateAtLeast4Characters = function(input) {
+	if (!input || input.length<4) {
+		return false;
+	}
+
+	return true;
+}
+
 var pattern = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 
 var validateEmailAddress = function(emailAddress) {
@@ -28,4 +36,4 @@ var validateUsesOnlyDigitCharacters = function(input) {
 	return isNum;
 }
 
-export { validateEmailAddress, validateUsesOnlyDigitCharacters };
+export { validateAtLeast4Characters, validateEmailAddress, validateUsesOnlyDigitCharacters };

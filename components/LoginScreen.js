@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
-//import * as EmailValidator from 'email-validator';
-// should remove email-validator from file system if not used!
-import { validateEmailAddress } from './Validator';
+import { validateAtLeast4Characters } from './Validator'; 
 import ApiService from './../tests/ApiService';
 
 // SEE THIS!!!
@@ -15,17 +13,17 @@ export default class LoginScreen extends React.Component {
     super();
 
     this.state = {
-      emailAddress: ''
+      username: ''
     };
 
     this.login = this.login.bind(this);
   }
 
   async login() {
-    const { emailAddress } = this.state;
+    const { username } = this.state;
 
-    if (!validateEmailAddress(emailAddress)) {
-      Alert.alert("Please enter a valid email address.");
+    if (!validateAtLeast4Characters(username)) {
+      Alert.alert("Please enter a username with at least 4 characters.");
       return;
     }
 
@@ -33,12 +31,12 @@ export default class LoginScreen extends React.Component {
     //https://snack.expo.io/@ryan12/223b0a
     //https://stackoverflow.com/questions/46750263/react-js-how-to-do-service-layer-call
     //https://medium.com/react-native-training/learning-to-test-react-native-with-jest-part-4-1d6df49866b1
-    let userExists = await this.userExistsInBackend(emailAddress); //= true; // will make api call to backend
+    let userExists = await this.userExistsInBackend(username); //= true; // will make api call to backend
 
     if (userExists) {
-      this.props.loginUser(this.state.emailAddress); // show user logged in
+      this.props.loginUser(this.state.username); // show user logged in
     } else if (userExists === false) {
-      Alert.alert("There is no account associated with this email address. Check your spelling or click Create new account.");
+      Alert.alert("There is no account associated with this Username. Check your spelling or click Create new account.");
     } else { // userExists === null OR undefined, etc.
       Alert.alert("Error reaching server, check your internet connection.");
     }
@@ -97,13 +95,13 @@ export default class LoginScreen extends React.Component {
     return (
       <View>
         <View style={{ margin: 10 }}>
-          <Text>Login with your email address if you have an account:</Text>
+          <Text>Login with your Username if you have an account:</Text>
         </View>
         <View style={{ margin: 10 }}>        
           <TextInput
-            value={this.state.emailAddress}
-            onChangeText={(emailAddress) => this.setState({ emailAddress: emailAddress.trim() })}
-            placeholder="Email address"
+            value={this.state.username}
+            onChangeText={(username) => this.setState({ username: username.trim() })} // save as lowercase!!!!!
+            placeholder="Username"
             style={{height: 40, borderColor: 'gray', borderWidth: 1 }}
           />
         </View>
