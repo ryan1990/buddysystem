@@ -35,42 +35,41 @@ export default class App extends React.Component {
     this.logoutUser = this.logoutUser.bind(this);
   }
 
-  // when app starts, it checks storage to see if Key exists and sets state.loggedInUser to Value from storage if exists, else set to "". Key = loggedInUserStorageKey, Value = "email@test.com"
-  // logout: set state to "" AND remove key from storage. Key = loggedInUserStorageKey, Value = "email@test.com"
-  // login: create key/value in storage and set state to the value. Key = loggedInUserStorageKey. Value = "email@test.com"
-  // create new account: after confimed that email address is in AWS as the account, perform login with value set to the email address.
+  // when app starts, it checks storage to see if Key exists and sets state.loggedInUser to Value from storage if exists, else set to "". Key = loggedInUserStorageKey, Value = "myusername123"
+  // logout: set state to "" AND remove key from storage. Key = loggedInUserStorageKey, Value = "myusername123"
+  // login: create key/value in storage and set state to the value. Key = loggedInUserStorageKey. Value = "myusername123"
+  // create new account: after confimed that username is in AWS as the account, perform login with value set to the username.
   componentDidMount = () => AsyncStorage.getItem(this.loggedInUserStorageKey).then((value) => {
-    if (value !== null) { // key for user email address exists, indicating they are logged in
+    if (value !== null) { // key for username exists, indicating they are logged in
       this.setState({ loggedInUser: value });
       this.changeScreenToStopwatch();
-    } else { // no key for user email address exists, indicating no one is logged in
+    } else { // no key for username exists, indicating no one is logged in
       this.setState({ loggedInUser: "" });
       this.changeScreenToLogin();
     }
   });
 
-  // create key/value in storage and set state to emailAddress
-  loginUser(emailAddress) {
-    this.storeUserEmailAddress(emailAddress);
-    this.setState({ loggedInUser: emailAddress });
+  // create key/value in storage and set state to username
+  loginUser(username) {
+    this.storeUsername(username);
+    this.setState({ loggedInUser: username });
   }
 
-  storeUserEmailAddress(emailAddress) {
-    AsyncStorage.setItem(this.loggedInUserStorageKey, emailAddress);
+  storeUsername(username) {
+    AsyncStorage.setItem(this.loggedInUserStorageKey, username);
   }
 
   logoutUser() {
-    this.removeUserEmailAddressFromStorage();
+    this.removeUsernameFromStorage();
     this.setState({ loggedInUser: "" });
   }
 
   // remove the key/value pair with key = this.loggedInUserStorageKey from storage
-  removeUserEmailAddressFromStorage() {
+  removeUsernameFromStorage() {
     AsyncStorage.removeItem(this.loggedInUserStorageKey);
   }
 
   changeScreen(newScreen) {
-    console.log("changeScreen(): "+newScreen);
     this.setState({screen: newScreen});
   }
 
@@ -97,8 +96,8 @@ export default class App extends React.Component {
           {(() => {
           switch (this.state.screen) {
             case "StopwatchScreen":   return <StopwatchScreen logoutUser={ () => {this.logoutUser(); this.changeScreenToLogin()} } goToUpdateUserScreen={this.changeScreenToUpdateUser} loggedInUser={this.state.loggedInUser} />;
-            case "LoginScreen":   return <LoginScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToCreateUserScreen={this.changeScreenToCreateUser} />;
-            case "CreateUserScreen":   return <CreateUserScreen loginUser={ (email) => {this.loginUser(email); this.changeScreenToStopwatch()} } goToLoginScreen={this.changeScreenToLogin} />;
+            case "LoginScreen":   return <LoginScreen loginUser={ (username) => {this.loginUser(username); this.changeScreenToStopwatch()} } goToCreateUserScreen={this.changeScreenToCreateUser} />;
+            case "CreateUserScreen":   return <CreateUserScreen loginUser={ (username) => {this.loginUser(username); this.changeScreenToStopwatch()} } goToLoginScreen={this.changeScreenToLogin} />;
             case "UpdateUserScreen":  return <UpdateUserScreen logoutUser={ () => {this.logoutUser(); this.changeScreenToLogin()} } goToStopwatchScreen={this.changeScreenToStopwatch} loggedInUser={this.state.loggedInUser} />;
           }
         })()}
