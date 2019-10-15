@@ -21,7 +21,7 @@ export default class LoginScreen extends React.Component {
     this.login = this.login.bind(this);
   }
 
-  login() {
+  async login() {
     const { emailAddress } = this.state;
 
     if (!validateEmailAddress(emailAddress)) {
@@ -29,25 +29,17 @@ export default class LoginScreen extends React.Component {
       return;
     }
 
-    //
-    //
-    // use await??
-    //
-    //
     //READ:
     //https://snack.expo.io/@ryan12/223b0a
     //https://stackoverflow.com/questions/46750263/react-js-how-to-do-service-layer-call
     //https://medium.com/react-native-training/learning-to-test-react-native-with-jest-part-4-1d6df49866b1
-    let userExists = this.userExistsInBackend(emailAddress); //= true; // will make api call to backend
+    let userExists = await this.userExistsInBackend(emailAddress); //= true; // will make api call to backend
 
     if (userExists) {
       this.props.loginUser(this.state.emailAddress); // show user logged in
     } else if (userExists === false) {
       Alert.alert("There is no account associated with this email address. Check your spelling or click Create new account.");
-      // how can user update their goal/commitment later?
-      // separate account creation for timing from create/update of commitment/goal?
-      // have new screen that logged in user can use to View AND Update commitment/goal!
-    } else { // userExists === null
+    } else { // userExists === null OR undefined, etc.
       Alert.alert("Error reaching server, check your internet connection.");
     }
   }
@@ -55,11 +47,21 @@ export default class LoginScreen extends React.Component {
   // make call to backend to see if user exists
   async userExistsInBackend(user) {
     api = new ApiService();
-    let response = await api.DoAxiosCallFake();
-    console.log("Finished DoAxiosCall()");
+    let response = await api.UserExistsFakeTrue();
 
-    let resJson = JSON.stringify(response);
-    console.log("resJson="+resJson);
+    try {
+      return response.data.userIdExists;
+    } catch(error) {
+      return null;
+    }
+    // console.log("userIdExists: "+answer);
+
+    // if (response.data.userIdExists) {
+    //   return true;
+    // }
+
+    // let resJson = JSON.stringify(response);
+    // console.log("resJson="+resJson);
 
 
 

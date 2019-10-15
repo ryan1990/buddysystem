@@ -8,55 +8,16 @@ export default class ApiService {
 
     constructor() {
     }
-    
-    // return Promise 
-    // DoAxiosCall(callback) {
-    async DoAxiosCall() {
-        let uri = "https://jsonplaceholder.typicode.com/posts/1";
 
-        // think about try/catch for error handling
+    async UserExists(userId) {
+        // to be completed
 
-        // const response = await fetch(uri);
-        // return response;
-        // console.log("1 done. response.status="+response.status);
-        let response;
-        try {
-            response = await axios.get(uri);
-            console.log("GOOD");
-        } catch (error) {
-            console.log("ERROR");
-            response = error;
-        }
-
-        return response;
-
-        // let finalResponse = null;
-        // // add await here and use axios then, catch to handle, what about bad domain?
-        // axios.get(uri)
-        //     .then(function (response) {
-        //         //callback(response);
-                
-        //         console.log("SUCCESS in DoAxiosCall(), response.status="+response.status);
-        //         finalResponse = response;
-        //     })
-        //     .catch(function (error) {
-        //         console.log("ERROR");
-        //         console.log(JSON.stringify(error));
-        //         finalResponse = error;
-
-        //         if (error.response) {
-        //             callback(error.response);
-        //             // if (error.response.status === 404) {
-        //             //     callback(`\u2014`)
-        //             // }
-        //         }
-        //     })
-
-        //     return finalResponse;
+        // try catch
+        // if doesn't go into catch, return response.
+        // if does, return null
     }
-
-    // CONTINUE HERE!
-    DoAxiosCallFake() {
+    
+    async UserExistsFakeTrue(userId) {
         response = {
             data: {
                 userIdExists: true
@@ -65,8 +26,37 @@ export default class ApiService {
         }
 
         return response;
+    }
 
-        //CONTINUE HERE and create response JS object to use in callback so this fake method can be called
+    async UserExistsFakeFalse(userId) {
+        response = {
+            data: {
+                userIdExists: false
+            },
+            status: 200
+        }
+
+        return response;
+    }
+
+    async UserExistsFakeErrorReturnNullResponse(userId) {
+        return null;
+    }
+
+    async DoAxiosCall() {
+        let uri = "https://jsonplaceholder.typicode.com/posts/1";
+        let response;
+
+        try {
+            response = await axios.get(uri);
+            console.log("GOOD");
+        } catch (error) {
+            console.log("ERROR, returning null");
+            response = null;
+            //response = error;
+        }
+
+        return response;
     }
 }
 

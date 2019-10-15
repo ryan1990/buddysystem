@@ -65,7 +65,7 @@ export default class StopwatchScreen extends React.Component {
       <View>
         <UserInfo loggedInUser={this.props.loggedInUser} logoutUser={this.props.logoutUser} />
         <View style={{ margin: 10 }}>
-          <Button title="Update Account Info" onPress={this.props.goToUpdateUserScreen} />
+          <Button title="View/Update Account Info" onPress={this.props.goToUpdateUserScreen} />
         </View>
 
         <Text style={styles.titleText}>Time Practiced</Text>
