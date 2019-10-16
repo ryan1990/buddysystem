@@ -51,7 +51,6 @@ export default class StopwatchScreen extends React.Component {
     let sessionLengthInSeconds = this.convertMsToSeconds(this.state.runningTime);
 
     let successfulSessionWrite = await this.writeSessionToBackend(username, sessionStartTime, sessionLengthInSeconds);
-    console.log("jjjjj "+successfulSessionWrite);
 
     if (successfulSessionWrite) {
         this.setStartTimeToNow();

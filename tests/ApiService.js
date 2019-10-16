@@ -77,15 +77,42 @@ export default class ApiService {
         return null;
     }
 
-    // Request JSON:
-    //         {
-    //             "userId":"ryan12",
-    //             "sessionStartTime":"2012-04-23T18:25:43.511Z", // Let's use this format for date/time unless you have a better idea. This explains why it's good: https://stackoverflow.com/questions/10286204/the-right-json-date-format
-    //             "sessionLengthInSeconds":"955"
+    // Get existing user’s goal and commitment (minutes, days)
+    async GetUserGoalAndCommitment(userId) {
+        // to be completed
+    }
+
+    async GetUserGoalAndCommitmentFakeSuccess200() {
+        response = {
+            data: {
+                userId:"ryan12",
+                goal:"Learn to play Carol of the Bells on Piano by May 25th",
+                commitment: {
+                    minutesPerDay:10,
+                    daysPerWeek:5
+                }
+            },
+            status: 200
+        }
+
+        return response;
+    }
+
+    async GetUserGoalAndCommitmentFakeErrorReturnNullResponse() {
+        return null;
+    }
+
+    // GET https://DomainAndPath/{userId}
+    //     Response Code: 200
+    //     Response JSON:
+    //     {
+    //         "userId":"ryan12",
+    //         "goal":"Learn to play Carol of the Bells on Piano by May 25th",
+    //         "commitment": {
+    //             "minutesPerDay":"10",
+    //             "daysPerWeek":"5"
     //         }
-    //         Response Code: 201 (Created)
-    //         Response JSON:
-    //             Nothing needed, but can send back the request JSON for success, or some Error message along with an error HTTP code if there's a problem.
+    //     }
 
 
     async PostCallExperiment() {
