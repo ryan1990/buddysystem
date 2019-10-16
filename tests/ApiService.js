@@ -9,6 +9,34 @@ export default class ApiService {
     constructor() {
     }
 
+    async GetUserSessions(userId) {
+        // to be completed
+    }
+
+    async GetUserSessionsFakeSuccessWithSessions() {
+        let response = {
+            data: {
+                sessions: [
+                    {
+                        userId:"ryan12",
+                        sessionStartTime:"2012-04-23T18:25:43.511Z",
+                        sessionLengthInSeconds:"955"
+                    },
+                    {
+                        userId:"ryan12",
+                        sessionStartTime:"2012-04-24T19:28:44.777Z",
+                        sessionLengthInSeconds:"1202"
+                    }
+                ]
+            },
+            status: 200
+        }
+
+        return response;
+    }
+
+    // try empty and null sessions, also null data
+
     async UserExists(userId) {
         // to be completed
 
@@ -119,19 +147,6 @@ export default class ApiService {
     async GetUserGoalAndCommitmentFakeErrorReturnNullResponse() {
         return null;
     }
-
-    // GET https://DomainAndPath/{userId}
-    //     Response Code: 200
-    //     Response JSON:
-    //     {
-    //         "userId":"ryan12",
-    //         "goal":"Learn to play Carol of the Bells on Piano by May 25th",
-    //         "commitment": {
-    //             "minutesPerDay":"10",
-    //             "daysPerWeek":"5"
-    //         }
-    //     }
-
 
     async PostCallExperiment() {
         let uri = "https://jsonplaceholder.typicode.com/posts";
