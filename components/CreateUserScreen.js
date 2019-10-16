@@ -60,10 +60,25 @@ export default class CreateUserScreen extends React.Component {
   // make call to backend to see if user exists
   async userExistsInBackend(user) {
     api = new ApiService();
-    let response = await api.UserExistsFakeFalse();
+    let response = await api.UserExistsFakeFalse(); // put in try?
 
     try {
       return response.data.userIdExists;
+    } catch(error) {
+      return null;
+    }
+  }
+  
+  async createUserInBackend(username, smartGoal, minutesPerDay, daysPerWeek) {
+    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
+    try {
+      // let response = await api.CreateUser(username, smartGoal, minutesPerDay, daysPerWeek);
+      let response = await api.CreateUserFakeSuccess201();
+      if (response.status === 201) {
+        return true;
+      } else {
+        return null;
+      }
     } catch(error) {
       return null;
     }
@@ -140,7 +155,7 @@ export default class CreateUserScreen extends React.Component {
           <Button
             title="Create Account"
             onPress={ async () => {
-                const { username } = this.state;
+                const { username, smartGoal, minutesPerDay, daysPerWeek } = this.state;
                 
                 let validInputs = this.validateInputs(Alert.alert);
                 if (!validInputs) {
@@ -150,12 +165,18 @@ export default class CreateUserScreen extends React.Component {
                 let userExists = await this.userExistsInBackend(username); // make sure we call with all lower-case characters!
 
                 if (!userExists) {
-                  // TODO: create this new user in backend
-                  // TODO: let app know we are logged in with this user!
+                  let createdUserSuccessfully = await this.createUserInBackend(username, smartGoal, minutesPerDay, daysPerWeek);
+
+                  if (createdUserSuccessfully === null) {
+                    Alert.alert(null, "Could not create user account. Error reaching server, check your internet connection.");
+                    // TODO: pass null first in all alerts in App!
+                    return;
+                  }
+
                   this.props.loginUser(this.state.username);
                   //Alert.alert("Create User button clicked in !userExists condition");
                 } else {
-                  Alert.alert("An account with this Username already exists.");
+                  Alert.alert(null, "An account with this Username already exists.");
                 }
               }
             }

@@ -1,7 +1,8 @@
 // React Native Mobile time tracker app used to capture music practice sessions.
 import React from 'react';
-import { Button, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import UserInfo from './UserInfo';
+import ApiService from './../tests/ApiService';
 
 // Stopwatch page should show username they are logged in as.
 
@@ -12,6 +13,7 @@ export default class StopwatchScreen extends React.Component {
     this.state = {
       status: "unstarted", // can be "unstarted", "running", or "paused"
       completeButtonDisabled: true,
+      sessionStartTime: null,
       runningTime: 0
     };
   }
@@ -21,7 +23,14 @@ export default class StopwatchScreen extends React.Component {
     if (this.state.status == "running") {
       clearInterval(this.timer);
       this.setState({status: "paused"});
-    } else {
+    } else if (this.state.status == "unstarted") {
+      const startTime = Date.now() - this.state.runningTime;
+      this.timer = setInterval(() => {
+        this.setState({ runningTime: Date.now() - startTime });
+      }, 1000);
+      this.setState({status: "running"});
+      this.setStartTimeToNow();
+    } else { //this.state.status == "paused"
       const startTime = Date.now() - this.state.runningTime;
       this.timer = setInterval(() => {
         this.setState({ runningTime: Date.now() - startTime });
@@ -30,14 +39,56 @@ export default class StopwatchScreen extends React.Component {
     }
   };
 
-  handleComplete = () => {
-    clearInterval(this.timer);
-    this.setState({ runningTime: 0, status: false });
-    this.setState({ status: "unstarted"});
+  setStartTimeToNow() {
+    let now = new Date(Date.now());
+    let nowJSON = now.toJSON();
+    this.setState({sessionStartTime: nowJSON});
+  }
+
+  handleComplete = async () => {
+    let username = this.props.loggedInUser;
+    let sessionStartTime = this.state.sessionStartTime;
+    let sessionLengthInSeconds = this.convertMsToSeconds(this.state.runningTime);
+
+    let successfulSessionWrite = await this.writeSessionToBackend(username, sessionStartTime, sessionLengthInSeconds);
+    console.log("jjjjj "+successfulSessionWrite);
+
+    if (successfulSessionWrite) {
+        this.setStartTimeToNow();
+        clearInterval(this.timer);
+        this.setState({ runningTime: 0, status: false });
+        this.setState({ status: "unstarted"});
+        Alert.alert(null, "Good job! Your practice session has been submitted!"); // TODO: inject this dependency, or better yet, make a class property injected into constructor
+    } else {
+      Alert.alert(null, "Could not submit your time. Error reaching server, check your internet connection and try again."); // TODO: inject this dependency, or better yet, make a class property injected into constructor
+    }
   };
+
+  async writeSessionToBackend(username, sessionStartTime, sessionLengthInSeconds) {
+    console.log("this.writeSessionToBackend:"+username+", "+sessionStartTime+", "+sessionLengthInSeconds);
+    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
+    try {
+      // let response = await api.CreateUser(username, smartGoal, minutesPerDay, daysPerWeek);
+      let response = await api.SubmitPracticeSessionFakeSuccess201();
+      if (response === null) {
+        return null;
+      }
+      if (response.status === 201) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch(error) {
+      return null;
+    }
+  }
 
   componentWillUnmount() {
     clearInterval(this.timer);
+  }
+
+  convertMsToSeconds(ms) {
+    return Math.floor(ms/1000);
   }
 
   // given ms: "64333", convert to Minutes:Seconds: "64:33"

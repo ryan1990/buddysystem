@@ -45,7 +45,7 @@ export default class LoginScreen extends React.Component {
   // make call to backend to see if user exists
   async userExistsInBackend(user) {
     api = new ApiService();
-    let response = await api.UserExistsFakeTrue();
+    let response = await api.UserExistsFakeTrue(); // put in try?
 
     try {
       return response.data.userIdExists;

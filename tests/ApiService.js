@@ -43,6 +43,74 @@ export default class ApiService {
         return null;
     }
 
+    async CreateUser(username, smartGoal, minutesPerDay, daysPerWeek) {
+        // to be completed
+    }
+
+    async CreateUserFakeSuccess201() {
+        response = {
+            data: null, // the data JSON may vary
+            status: 201
+        }
+
+        return response;
+    }
+
+    async CreateUserFakeErrorReturnNullResponse() {
+        return null;
+    }
+
+    async SubmitPracticeSession() {
+        // to be completed
+    }
+
+    async SubmitPracticeSessionFakeSuccess201() {
+        response = {
+            data: null, // the data JSON may vary
+            status: 201
+        }
+
+        return response;
+    }
+
+    async SubmitPracticeSessionFakeErrorReturnNullResponse() {
+        return null;
+    }
+
+    // Request JSON:
+    //         {
+    //             "userId":"ryan12",
+    //             "sessionStartTime":"2012-04-23T18:25:43.511Z", // Let's use this format for date/time unless you have a better idea. This explains why it's good: https://stackoverflow.com/questions/10286204/the-right-json-date-format
+    //             "sessionLengthInSeconds":"955"
+    //         }
+    //         Response Code: 201 (Created)
+    //         Response JSON:
+    //             Nothing needed, but can send back the request JSON for success, or some Error message along with an error HTTP code if there's a problem.
+
+
+    async PostCallExperiment() {
+        let uri = "https://jsonplaceholder.typicode.com/posts";
+
+        let requestBody = JSON.stringify({
+            title: 'foo',
+            body: 'bar',
+            userId: 1
+        });
+
+        try {
+            let response = await axios.post(uri, requestBody);
+            console.log("SUCCESS POST, response:");
+            //console.log(response);
+            return response;
+        } catch(error) {
+            console.log("CATCH POST, error:");
+            console.log(error);
+            return error;
+
+            // TODO: SEE other methods and consider returning error instead of null!
+        }
+    }
+
     async DoAxiosCall() {
         let uri = "https://jsonplaceholder.typicode.com/posts/1";
         let response;
