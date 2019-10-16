@@ -69,12 +69,27 @@ export default class CreateUserScreen extends React.Component {
     }
   }
   
-  async createUserInBackend(username, smartGoal, minutesPerDay, daysPerWeek) {
+  async createUserInBackend(username) {
     api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      // let response = await api.CreateUser(username, smartGoal, minutesPerDay, daysPerWeek);
+      // let response = await api.CreateUser(username);
       let response = await api.CreateUserFakeSuccess201();
       if (response.status === 201) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch(error) {
+      return null;
+    }
+  }
+
+  async updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek) {
+    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
+    try {
+      // let response = await api.UpdateUser(username, smartGoal, minutesPerDay, daysPerWeek);
+      let response = await api.UpdateUserFakeSuccess201();
+      if (response.status === 200) {
         return true;
       } else {
         return null;
@@ -154,22 +169,29 @@ export default class CreateUserScreen extends React.Component {
         <View style={{ margin: 10 }}>
           <Button
             title="Create Account"
-            onPress={ async () => {
-                const { username, smartGoal, minutesPerDay, daysPerWeek } = this.state;
-                
+            onPress={ async () => {                
                 let validInputs = this.validateInputs(Alert.alert);
                 if (!validInputs) {
                   return;
                 }
 
+                const { username, smartGoal, minutesPerDay, daysPerWeek } = this.state;
+
                 let userExists = await this.userExistsInBackend(username); // make sure we call with all lower-case characters!
 
                 if (!userExists) {
-                  let createdUserSuccessfully = await this.createUserInBackend(username, smartGoal, minutesPerDay, daysPerWeek);
+                  let createdUserSuccessfully = await this.createUserInBackend(username);
 
                   if (createdUserSuccessfully === null) {
                     Alert.alert(null, "Could not create user account. Error reaching server, check your internet connection.");
                     // TODO: pass null first in all alerts in App!
+                    return;
+                  }
+
+                  let updatedUserSuccessfully = await this.updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek);
+
+                  if (updatedUserSuccessfully === null) {
+                    Alert.alert(null, "Could not update user account. Error reaching server, check your internet connection.");
                     return;
                   }
 

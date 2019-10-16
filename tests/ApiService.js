@@ -43,7 +43,7 @@ export default class ApiService {
         return null;
     }
 
-    async CreateUser(username, smartGoal, minutesPerDay, daysPerWeek) {
+    async CreateUser(username) {
         // to be completed
     }
 
@@ -57,6 +57,24 @@ export default class ApiService {
     }
 
     async CreateUserFakeErrorReturnNullResponse() {
+        return null;
+    }
+
+    // user must exist. Code for that
+    async UpdateUser(username, smartGoal, minutesPerDay, daysPerWeek) {
+        // to be completed
+    }
+
+    async UpdateUserFakeSuccess201() {
+        response = {
+            data: null, // the data JSON may vary
+            status: 200
+        }
+
+        return response;
+    }
+
+    async UpdateUserFakeErrorReturnNullResponse() {
         return null;
     }
 

@@ -74,6 +74,21 @@ export default class UpdateUserScreen extends React.Component {
     this.setState({ daysPerWeek: daysPerWeek });
   }
 
+  async updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek) {
+    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
+    try {
+      // let response = await api.UpdateUser(username, smartGoal, minutesPerDay, daysPerWeek);
+      let response = await api.UpdateUserFakeSuccess201();
+      if (response.status === 200) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch(error) {
+      return null;
+    }
+  }
+
   // injecting dependency for alert method
   validateInputs(alertMethod) {
     if (!this.validateContainsText(this.state.smartGoal)) {
@@ -164,24 +179,23 @@ export default class UpdateUserScreen extends React.Component {
         <View style={{ margin: 10 }}>
           <Button
             title="Update Account Info"
-            onPress={() => {
-                // let validInputs = this.validateInputs(Alert.alert);
-                // if (!validInputs) {
-                //   return;
-                // }
+            onPress={async () => {
+                let validInputs = this.validateInputs(Alert.alert);
+                if (!validInputs) {
+                  return;
+                }
 
-                // //let userExists = false;//true; // will make api call to backend // make sure we call with all lower-case email address characters!
+                const { username, smartGoal, minutesPerDay, daysPerWeek } = this.state;
 
-                // if (!userExists) {
-                //   // TODO: create this new user in backend
-                //   // TODO: let app know we are logged in with this user!
-                //   this.props.loginUser(this.state.emailAddress);
-                //   //Alert.alert("Create User button clicked in !userExists condition");
-                // } else {
-                //   Alert.alert("An account with this email address already exists.");
-                // }
+                let updatedUserSuccessfully = await this.updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek);
 
-                
+                if (updatedUserSuccessfully === null) {
+                  Alert.alert(null, "Could not update user account. Error reaching server, check your internet connection.");
+                  return;
+                } else { // updatedUserSuccessfully === true
+                  Alert.alert(null, "Account info updated successfully.");
+                  this.props.goToStopwatchScreen();
+                }
               }
             }
           />
