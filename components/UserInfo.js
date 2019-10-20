@@ -17,6 +17,8 @@ export default class UserInfo extends React.Component {
 
     console.log("comm: "+JSON.stringify(commitment));
     this.successfulWeeks = this.successfulWeekStreak(userSessions, commitment);
+
+    // console.log("this.successfulWeeks: "+JSON.stringify(this.successfulWeeks));
   }
 
 //   commitment: {
@@ -60,15 +62,74 @@ export default class UserInfo extends React.Component {
 
   // see if commitment has been met for the specific weeks leading up to the current one
   successfulWeekStreak(userSessions, commitment) {
+    // convert UTC stored time to user's time and judge that?
+
     // have method taking in a particular week returning true or false for met
     // find number of day periods fulfilling commitment minute total (combining multiple sessions possibly). Return true once this equals commitment days
+    let count = 0;
     
+    let weekEnd = this.getPreviousSundayAtMidnight(Date.now())
+    let weekStart = this.getWeeksSubtracted(weekEnd, 1);
+
+    let weekWasSuccessful = true;
+    while (true) {
+
+      weekWasSuccessful = this.weekWasSuccessful(weekStart, weekEnd, commitment);
+
+      if (!weekWasSuccessful) {
+        return count;
+      }
+
+      count++;
+      weekEnd = weekStart;
+      weekStart = this.getWeeksSubtracted(weekStart, 1);
+    }
+
     // last week, if met, keep checking...
     // 2nd to last, if met, keep checking...
     // 3rd to last, if met, keep checking...
     // ...
 
   }
+
+  // represents start of the week
+  getPreviousSundayAtMidnight(date) {
+    let dateObj = new Date(date);
+    dateObj.setDate(dateObj.getDate() - dateObj.getDay());
+    
+    let dateMidnight = dateObj.setHours(0,0,0);
+  	let dateMidnightDateObj = new Date(dateMidnight);
+    return dateObj;
+  }
+
+  // returns date with exactly weeks number of weeks subtracted
+  getWeeksSubtracted(date, weeks) {
+  	let dateObj = new Date(date);
+    dateObj.setDate(dateObj.getDate() - weeks*7);
+    return dateObj;
+  }
+
+  weekWasSuccessful(weekStart, weekEnd, commitment) {
+
+    // return this.successfulDaysInWeek >= commDays
+  }
+
+  successfulDaysInWeek(weekStart, weekEnd, commitment) {
+    let successfulDays = 0;
+    // foreach day:
+    for (let i=0; i<7; i++) {
+
+
+    }
+      // find all sessions starting on this day and sum times
+      // if sum >= commMin, successfulDays++
+    // return successfulDays
+    
+  }
+
+  // https://www.youtube.com/watch?v=Omppm_YUG2g
+  // https://www.youtube.com/watch?v=YxcIj_SLflw
+  // https://www.youtube.com/watch?v=bz4jTx4v-l8
 
   render() {
     return (
