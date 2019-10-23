@@ -7,18 +7,18 @@
 import UserInfo from '../components/UserInfo';
 
 describe("dateConvertFromUtcToLocal", () => {
-    test("returns correct date 420 min timezone", () => {
+    test("returns correct date -420 min timezone", () => {
         let utcDate = "2019-10-22T23:31:33.198Z";
-        let dateTimeOffsetMinutes = 420;
+        let dateTimeOffsetMinutes = -420;
         let expected = new Date(Date.parse("2019-10-22T16:31:33.198Z"));
 
         let userInfoClass = new UserInfo();
 
         expect(userInfoClass.dateConvertFromUtcToLocal(utcDate, dateTimeOffsetMinutes)).toEqual(expected);
     }),
-    test("returns correct date 360 min timezone", () => {
+    test("returns correct date -360 min timezone", () => {
         let utcDate = "2019-10-22T23:31:33.198Z";
-        let dateTimeOffsetMinutes = 360;
+        let dateTimeOffsetMinutes = -360;
         let expected = new Date(Date.parse("2019-10-22T17:31:33.198Z"));
 
         let userInfoClass = new UserInfo();
@@ -28,18 +28,18 @@ describe("dateConvertFromUtcToLocal", () => {
 })
 
 describe("dateConvertFromLocalToUtc", () => {
-    test("returns correct date 420 min timezone", () => {
+    test("returns correct date -420 min timezone", () => {
         let localDate = new Date(Date.parse("2019-10-22T16:31:33.198Z"));
-        let dateTimeOffsetMinutes = 420;
+        let dateTimeOffsetMinutes = -420;
         let expected = "2019-10-22T23:31:33.198Z";
 
         let userInfoClass = new UserInfo();
 
         expect(userInfoClass.dateConvertFromLocalToUtc(localDate, dateTimeOffsetMinutes)).toEqual(expected);
     }),
-    test("returns correct date 360 min timezone", () => {
+    test("returns correct date -360 min timezone", () => {
         let localDate = new Date(Date.parse("2019-10-22T17:31:33.198Z"));
-        let dateTimeOffsetMinutes = 360;
+        let dateTimeOffsetMinutes = -360;
         let expected = "2019-10-22T23:31:33.198Z";
 
         let userInfoClass = new UserInfo();
@@ -51,7 +51,7 @@ describe("dateConvertFromLocalToUtc", () => {
 describe("getPreviousSundayAtMidnight", () => {
     test("returns correct date", () => {
         let date = new Date(Date.parse("2019-10-15T21:11:42.298Z")); 
-        let dateTimeOffsetMinutes = 420;
+        let dateTimeOffsetMinutes = -420;
         let expected = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
 
         let userInfoClass = new UserInfo();
@@ -209,10 +209,10 @@ describe("sessionsStartingWithinPeriod", () => {
 
         expect(actualResult).toEqual(expectedResult);
     }),
-    test("thursday with dateTimeOffsetMinutes = 3*60 = 180", () => {
+    test("thursday with dateTimeOffsetMinutes = -3*60 = -180", () => {
         let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
         let periodEndMs = Date.parse("2019-10-11T00:00:00.000Z");
-        let dateTimeOffsetMinutes = 3*60;
+        let dateTimeOffsetMinutes = -3*60;
         let expectedResult = [{
             userId:"ryan12",
             sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
@@ -258,10 +258,10 @@ describe("sessionsStartingWithinPeriod", () => {
 
         expect(actualResult).toEqual(expectedResult);
     }),
-    test("thursday through sunday dateTimeOffsetMinutes = 24*60 = 1440", () => {
+    test("thursday through sunday dateTimeOffsetMinutes = -24*60 = 1440", () => {
         let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
         let periodEndMs = Date.parse("2019-10-13T00:00:00.000Z");
-        let dateTimeOffsetMinutes = 24*60;
+        let dateTimeOffsetMinutes = -24*60;
         let expectedResult = [{
             userId:"ryan12",
             sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
@@ -280,8 +280,6 @@ describe("sessionsStartingWithinPeriod", () => {
         expect(actualResult).toEqual(expectedResult);
     })
 
-
-    // do offset!!!!
 })
 
 

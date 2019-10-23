@@ -63,12 +63,12 @@ export default class UserInfo extends React.Component {
   // accepts ISO 8601 and returns JS Date object. ISO 8601 Example: "2019-10-22T23:31:33.198Z"
   dateConvertFromUtcToLocal(utcDate, dateTimeOffsetMinutes) {
     let utcDateMs = Date.parse(utcDate);
-    return new Date(utcDateMs - dateTimeOffsetMinutes*60000);
+    return new Date(utcDateMs + dateTimeOffsetMinutes*60000);
   }
 
   // accepts JS Date object and returns ISO 8601. ISO 8601 Example: "2019-10-22T23:31:33.198Z"
   dateConvertFromLocalToUtc(localDate, dateTimeOffsetMinutes) {
-    return this.removeDateEscapeCharacters(JSON.stringify(new Date(localDate.getTime() + dateTimeOffsetMinutes*60000)));
+    return this.removeDateEscapeCharacters(JSON.stringify(new Date(localDate.getTime() - dateTimeOffsetMinutes*60000)));
   }
 
   removeDateEscapeCharacters(dateInput) {
@@ -114,7 +114,7 @@ export default class UserInfo extends React.Component {
     let dateObj = new Date(date);
     dateObj.setHours(0,0,0,0);
     dateObj.setDate(dateObj.getDate() - dateObj.getDay());
-    return new Date(dateObj - dateTimeOffsetMinutes*60000);
+    return new Date(dateObj - (-1)*dateTimeOffsetMinutes*60000); // - (-1) is a hack to achieve math +, which gets interpreted as append
   }
 
   // returns date with exactly weeks number of weeks subtracted
@@ -170,7 +170,7 @@ export default class UserInfo extends React.Component {
 
       // user sessions are stored in UTC time in backend, so convert to local!
       let currentSessionStartMsUtc = Date.parse(currentSession.sessionStartTime);
-      let currentSessionStartMsLocal = currentSessionStartMsUtc - dateTimeOffsetMinutes*60000;
+      let currentSessionStartMsLocal = currentSessionStartMsUtc + dateTimeOffsetMinutes*60000;
       if (currentSessionStartMsLocal >= periodStartMs && currentSessionStartMsLocal <= periodEndMs) {
         result.push(currentSession); // this will still contain utc time
       }
