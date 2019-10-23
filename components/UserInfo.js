@@ -130,17 +130,53 @@ export default class UserInfo extends React.Component {
     return true; // temp:
   }
 
+  // 1035
   successfulDaysInWeek(userSessions, weekStart, weekEnd, commitment) {
     let successfulDays = 0;
     // foreach day:
     for (let i=0; i<7; i++) {
+      // find sessions starting on day
+      let weekStartMs = Date.parse(weekStart);
+      let weekEndMs = Date.parse(weekEnd);
+      let dayInMs = 24*60*60*1000;
 
+      let dayStartMs = weekStartMs + i*dayInMs;
+      let dayEndMs = weekStartMs + (i+1)*dayInMs;
+
+      // let sessionsStartingToday = 
+
+      // sum sessionLengthInSeconds for sessionsStartingToday
+
+      // if sum >= commMin, successfulDays++
 
     }
-      // find all sessions starting on this day and sum times
-      // if sum >= commMin, successfulDays++
-    // return successfulDays
+      
+      
+    return successfulDays;
     
+  }
+
+  //
+  //
+  // WE ASSUME SESSIONS ARE NOT SORTED BY START TIME.
+  // We could optimize if they were possibly
+  //
+  //
+  sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes) {
+    let result = [];
+
+    for (let i=0; i<userSessions.length; i++) {
+      let currentSession = userSessions[i];
+
+      // user sessions are stored in UTC time in backend, so convert to local!
+      let currentSessionStartMsUtc = Date.parse(currentSession.sessionStartTime);
+      let currentSessionStartMsLocal = currentSessionStartMsUtc - dateTimeOffsetMinutes*60000;
+      if (currentSessionStartMsLocal >= periodStartMs && currentSessionStartMsLocal <= periodEndMs) {
+        result.push(currentSession); // this will still contain utc time
+      }
+    }
+
+    return result;
   }
 
   // https://www.youtube.com/watch?v=Omppm_YUG2g
