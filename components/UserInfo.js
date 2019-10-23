@@ -60,6 +60,26 @@ export default class UserInfo extends React.Component {
     }
   }
 
+  // accepts ISO 8601 and returns JS Date object. ISO 8601 Example: "2019-10-22T23:31:33.198Z"
+  dateConvertFromUtcToLocal(utcDate, dateTimeOffsetMinutes) {
+    let utcDateMs = Date.parse(utcDate);
+    return new Date(utcDateMs - dateTimeOffsetMinutes*60000);
+  }
+
+  // accepts JS Date object and returns ISO 8601. ISO 8601 Example: "2019-10-22T23:31:33.198Z"
+  dateConvertFromLocalToUtc(localDate, dateTimeOffsetMinutes) {
+    // https://weblog.west-wind.com/posts/2014/jan/06/javascript-json-date-parsing-and-real-dates#json-dates-are-not-dates--they-are-strings
+    // return "2019-10-22T23:31:33.198Z";
+    //return localDate.getTime() + dateTimeOffsetMinutes*60000;
+    //return JSON.stringify(new Date(localDate + dateTimeOffsetMinutes*60000));
+    return this.removeDateEscapeCharacters(JSON.stringify(new Date(localDate.getTime() + dateTimeOffsetMinutes*60000)));
+
+  }
+
+  removeDateEscapeCharacters(dateInput) {
+    return dateInput.substring(1, dateInput.length-1);
+  }
+
   // see if commitment has been met for the specific weeks leading up to the current one
   successfulWeekStreak(userSessions, commitment) {
     // convert UTC stored time to user's time and judge that?
@@ -94,12 +114,20 @@ export default class UserInfo extends React.Component {
 
   // represents start of the week
   getPreviousSundayAtMidnight(date) {
-    let dateObj = new Date(date);
-    dateObj.setDate(dateObj.getDate() - dateObj.getDay());
+    //https://www.moesif.com/blog/technical/timestamp/manage-datetime-timestamp-timezones-in-api/#
+
+
+    // let dateObj = new Date(date);
+    // dateObj.setDate(dateObj.getDate() - dateObj.getDay());
     
-    let dateMidnight = dateObj.setHours(0,0,0);
-  	let dateMidnightDateObj = new Date(dateMidnight);
-    return dateObj;
+    // let dateMidnight = dateObj.setHours(0,0,0,0);
+  	// let dateMidnightDateObj = new Date(dateMidnight);
+    // return dateObj;
+
+    let now = new Date(Date.now());
+    now = new Date(now.toUTCString());
+    return JSON.stringify(now);
+    //return JSON.stringify(new Date(Date.now()));
   }
 
   // returns date with exactly weeks number of weeks subtracted
@@ -112,6 +140,7 @@ export default class UserInfo extends React.Component {
   weekWasSuccessful(weekStart, weekEnd, commitment) {
 
     // return this.successfulDaysInWeek >= commDays
+    return true; // temp:
   }
 
   successfulDaysInWeek(weekStart, weekEnd, commitment) {
