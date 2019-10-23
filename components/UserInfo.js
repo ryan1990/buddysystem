@@ -68,12 +68,7 @@ export default class UserInfo extends React.Component {
 
   // accepts JS Date object and returns ISO 8601. ISO 8601 Example: "2019-10-22T23:31:33.198Z"
   dateConvertFromLocalToUtc(localDate, dateTimeOffsetMinutes) {
-    // https://weblog.west-wind.com/posts/2014/jan/06/javascript-json-date-parsing-and-real-dates#json-dates-are-not-dates--they-are-strings
-    // return "2019-10-22T23:31:33.198Z";
-    //return localDate.getTime() + dateTimeOffsetMinutes*60000;
-    //return JSON.stringify(new Date(localDate + dateTimeOffsetMinutes*60000));
     return this.removeDateEscapeCharacters(JSON.stringify(new Date(localDate.getTime() + dateTimeOffsetMinutes*60000)));
-
   }
 
   removeDateEscapeCharacters(dateInput) {
@@ -94,7 +89,7 @@ export default class UserInfo extends React.Component {
     let weekWasSuccessful = true;
     while (true) {
 
-      weekWasSuccessful = this.weekWasSuccessful(weekStart, weekEnd, commitment);
+      weekWasSuccessful = this.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
 
       if (!weekWasSuccessful) {
         return count;
@@ -113,21 +108,13 @@ export default class UserInfo extends React.Component {
   }
 
   // represents start of the week
-  getPreviousSundayAtMidnight(date) {
+  getPreviousSundayAtMidnight(date, dateTimeOffsetMinutes) {
     //https://www.moesif.com/blog/technical/timestamp/manage-datetime-timestamp-timezones-in-api/#
 
-
-    // let dateObj = new Date(date);
-    // dateObj.setDate(dateObj.getDate() - dateObj.getDay());
-    
-    // let dateMidnight = dateObj.setHours(0,0,0,0);
-  	// let dateMidnightDateObj = new Date(dateMidnight);
-    // return dateObj;
-
-    let now = new Date(Date.now());
-    now = new Date(now.toUTCString());
-    return JSON.stringify(now);
-    //return JSON.stringify(new Date(Date.now()));
+    let dateObj = new Date(date);
+    dateObj.setHours(0,0,0,0);
+    dateObj.setDate(dateObj.getDate() - dateObj.getDay());
+    return new Date(dateObj - dateTimeOffsetMinutes*60000);
   }
 
   // returns date with exactly weeks number of weeks subtracted
@@ -137,13 +124,13 @@ export default class UserInfo extends React.Component {
     return dateObj;
   }
 
-  weekWasSuccessful(weekStart, weekEnd, commitment) {
+  weekWasSuccessful(userSessions, weekStart, weekEnd, commitment) {
 
     // return this.successfulDaysInWeek >= commDays
     return true; // temp:
   }
 
-  successfulDaysInWeek(weekStart, weekEnd, commitment) {
+  successfulDaysInWeek(userSessions, weekStart, weekEnd, commitment) {
     let successfulDays = 0;
     // foreach day:
     for (let i=0; i<7; i++) {

@@ -48,24 +48,85 @@ describe("dateConvertFromLocalToUtc", () => {
     })
 })
 
-// describe("getPreviousSundayAtMidnight", () => {
-//     test("returns correct date", () => {
-//         let date = "2019-10-15T21:11:42.298Z"; 
-//         let expected = "2019-10-13T00:00:00.000Z";
+describe("getPreviousSundayAtMidnight", () => {
+    test("returns correct date", () => {
+        let date = new Date(Date.parse("2019-10-15T21:11:42.298Z")); 
+        let dateTimeOffsetMinutes = 420;
+        let expected = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
 
-//         let userInfoClass = new UserInfo();
+        let userInfoClass = new UserInfo();
 
-//         expect(userInfoClass.getPreviousSundayAtMidnight(date)).toEqual(expected);
+        expect(userInfoClass.getPreviousSundayAtMidnight(date, dateTimeOffsetMinutes)).toEqual(expected);
 
-//         //https://medium.com/codeclan/mocking-es-and-commonjs-modules-with-jest-mock-37bbb552da43
+        //https://medium.com/codeclan/mocking-es-and-commonjs-modules-with-jest-mock-37bbb552da43
 
-//         //UserInfo.weekWasSuccessful(weekStart, weekEnd, commitment);
+        //UserInfo.weekWasSuccessful(weekStart, weekEnd, commitment);
 
-//         // jest.mock('./UserInfo', () => () => ({
-//         //     successfulWeeks: 0
-//         // }));
-//     })
-// })
+        // jest.mock('./UserInfo', () => () => ({
+        //     successfulWeeks: 0
+        // }));
+    })
+})
+
+describe("getWeeksSubtracted", () => {
+    test("subtract 1 week", () => {
+        let date = new Date(Date.parse("2019-10-15T21:11:42.298Z"));
+        let weeks = 1;
+        let expected = new Date(Date.parse("2019-10-08T21:11:42.298Z"));
+
+        let userInfoClass = new UserInfo();
+
+        expect(userInfoClass.getWeeksSubtracted(date, weeks)).toEqual(expected);
+    }),
+    test("subtract 3 weeks", () => {
+        let date = new Date(Date.parse("2019-10-15T21:11:42.298Z"));
+        let weeks = 3;
+        let expected = new Date(Date.parse("2019-09-24T21:11:42.298Z"));
+
+        let userInfoClass = new UserInfo();
+
+        expect(userInfoClass.getWeeksSubtracted(date, weeks)).toEqual(expected);
+    }),
+    test("subtract 0 weeks", () => {
+        let date = new Date(Date.parse("2019-10-15T21:11:42.298Z"));
+        let weeks = 0;
+        let expected = new Date(Date.parse("2019-10-15T21:11:42.298Z"));
+
+        let userInfoClass = new UserInfo();
+
+        expect(userInfoClass.getWeeksSubtracted(date, weeks)).toEqual(expected);
+    }),
+    test("subtract -2 weeks", () => {
+        let date = new Date(Date.parse("2019-10-15T21:11:42.298Z"));
+        let weeks = -2;
+        let expected = new Date(Date.parse("2019-10-29T21:11:42.298Z"));
+
+        let userInfoClass = new UserInfo();
+
+        expect(userInfoClass.getWeeksSubtracted(date, weeks)).toEqual(expected);
+    })
+})
+
+describe("successfulDaysInWeek", () => {
+    test("returns correct value", () => {
+        let sessions = [{
+            userId:"ryan12",
+            sessionStartTime:"2019-10-06T21:11:42.298Z", // sun
+            sessionLengthInSeconds:"600"
+        },
+        {
+            userId:"ryan12",
+            sessionStartTime:"2019-10-07T21:11:42.298Z", // mon
+            sessionLengthInSeconds:"500"
+        },
+        {
+            userId:"ryan12",
+            sessionStartTime:"2019-10-08T00:02:00.333Z", // tue
+            sessionLengthInSeconds:"700"
+        }];
+    })
+})
+
 
 // function filterByTerm(inputArr, searchTerm) {
 //     let regex = new RegExp(searchTerm, "i");
