@@ -77,8 +77,6 @@ export default class UserInfo extends React.Component {
 
   // see if commitment has been met for the specific weeks leading up to the current one
   successfulWeekStreak(userSessions, commitment) {
-    // convert UTC stored time to user's time and judge that?
-
     // have method taking in a particular week returning true or false for met
     // find number of day periods fulfilling commitment minute total (combining multiple sessions possibly). Return true once this equals commitment days
     let count = 0;
@@ -107,7 +105,9 @@ export default class UserInfo extends React.Component {
 
   }
 
-  // represents start of the week
+  // represents start of the week from user's local timezone perspective
+  // should return a Date with epoch in UTC perspective of user's local last Sunday at midnight
+  // this not unit testable for running in any timezone!
   getPreviousSundayAtMidnight(date, dateTimeOffsetMinutes) {
     //https://www.moesif.com/blog/technical/timestamp/manage-datetime-timestamp-timezones-in-api/#
 
@@ -119,18 +119,26 @@ export default class UserInfo extends React.Component {
 
   // returns date with exactly weeks number of weeks subtracted
   getWeeksSubtracted(date, weeks) {
-  	let dateObj = new Date(date);
-    dateObj.setDate(dateObj.getDate() - weeks*7);
-    return dateObj;
+    let weekInMs = 7*24*60*60*1000;
+    let dateEpoch = date.getTime();
+    let resultDateEpoch = dateEpoch - weeks*weekInMs;
+    return new Date(resultDateEpoch);
+    
+    // let dateObj = new Date(date);
+    // dateObj.setDate(dateObj.getDate() - weeks*7);
+    // return dateObj;
   }
 
+  // good place to mock for unit test!
   weekWasSuccessful(userSessions, weekStart, weekEnd, commitment) {
-
+    let successfulDaysInWeek = this.successfulDaysWithinPeriod(userSessions, weekStart, weekEnd, commitment.minutesPerDay);
+    return successfulDaysInWeek >= commitment.daysPerWeek;
     // return this.successfulDaysInWeek >= commDays
     return true; // temp:
   }
 
-  // 1035
+  // periodStart, periodEnd are in terms of UTC
+  // TODO: remove dateTimeOffsetMinutes from this and other methods?
   successfulDaysWithinPeriod(userSessions, periodStart, periodEnd, minutesPerDay, dateTimeOffsetMinutes) {
     let successfulDays = 0;
     let dayInMs = 24*60*60*1000;
@@ -140,15 +148,9 @@ export default class UserInfo extends React.Component {
     let dayStartMs = periodStartMs;
     let dayEndMs = periodStartMs + dayInMs;
 
-    // console.log(dayStartMs);
-    // console.log(dayEndMs);
-
-    // for (let i=0; i<7; i++) {
     while (dayEndMs <= periodEndMs) {
       let sessionsStartingToday = this.sessionsStartingWithinPeriod(userSessions, dayStartMs, dayEndMs, dateTimeOffsetMinutes);
       let sumSessionLengths = this.sumSessionLengths(sessionsStartingToday);
-      //console.log("sessionsStartingToday "+ JSON.stringify(sessionsStartingToday));
-      // console.log("III "+sumSessionLengths);
 
       if (sumSessionLengths >= minutesPerDay*60) {
         successfulDays++;
@@ -157,7 +159,14 @@ export default class UserInfo extends React.Component {
       dayStartMs = dayEndMs;
       dayEndMs = dayEndMs + dayInMs;
     }
-     
+    // handle partial day remaining
+    let sessionsStartingInTimeRemaining = this.sessionsStartingWithinPeriod(userSessions, dayStartMs, periodEndMs, dateTimeOffsetMinutes);
+    let sumSessionLengthsOfRemaining = this.sumSessionLengths(sessionsStartingInTimeRemaining);
+
+    if (sumSessionLengthsOfRemaining >= minutesPerDay*60) {
+      successfulDays++;
+    }
+
     return successfulDays; 
   }
 
@@ -195,9 +204,10 @@ export default class UserInfo extends React.Component {
       let currentSessionStartMsUtc = Date.parse(currentSession.sessionStartTime);
       let currentSessionStartMsLocal = currentSessionStartMsUtc + dateTimeOffsetMinutes*60000;
       
-      console.log("currentSessionStartMsLocal: "+currentSessionStartMsLocal);
-      console.log("periodStartMs: "+periodStartMs);
-      console.log("periodEndMs: "+periodEndMs);
+      // console.log("currentSessionStartMsUtc: "+currentSessionStartMsUtc);
+      // console.log("currentSessionStartMsLocal: "+currentSessionStartMsLocal);
+      // console.log("periodStartMs: "+periodStartMs);
+      // console.log("periodEndMs: "+periodEndMs);
       
       if (currentSessionStartMsLocal >= periodStartMs && currentSessionStartMsLocal <= periodEndMs) {
         result.push(currentSession); // this will still contain utc time
