@@ -131,30 +131,53 @@ export default class UserInfo extends React.Component {
   }
 
   // 1035
-  successfulDaysInWeek(userSessions, weekStart, weekEnd, commitment) {
+  successfulDaysWithinPeriod(userSessions, periodStart, periodEnd, minutesPerDay, dateTimeOffsetMinutes) {
     let successfulDays = 0;
-    // foreach day:
-    for (let i=0; i<7; i++) {
-      // find sessions starting on day
-      let weekStartMs = Date.parse(weekStart);
-      let weekEndMs = Date.parse(weekEnd);
-      let dayInMs = 24*60*60*1000;
+    let dayInMs = 24*60*60*1000;
+    let periodStartMs = Date.parse(periodStart);
+    let periodEndMs = Date.parse(periodEnd);
 
-      let dayStartMs = weekStartMs + i*dayInMs;
-      let dayEndMs = weekStartMs + (i+1)*dayInMs;
+    let dayStartMs = periodStartMs;
+    let dayEndMs = periodStartMs + dayInMs;
 
-      // let sessionsStartingToday = 
+    // console.log(dayStartMs);
+    // console.log(dayEndMs);
 
-      // sum sessionLengthInSeconds for sessionsStartingToday
+    // for (let i=0; i<7; i++) {
+    while (dayEndMs <= periodEndMs) {
+      let sessionsStartingToday = this.sessionsStartingWithinPeriod(userSessions, dayStartMs, dayEndMs, dateTimeOffsetMinutes);
+      let sumSessionLengths = this.sumSessionLengths(sessionsStartingToday);
+      //console.log("sessionsStartingToday "+ JSON.stringify(sessionsStartingToday));
+      // console.log("III "+sumSessionLengths);
 
-      // if sum >= commMin, successfulDays++
+      if (sumSessionLengths >= minutesPerDay*60) {
+        successfulDays++;
+      }
 
+      dayStartMs = dayEndMs;
+      dayEndMs = dayEndMs + dayInMs;
     }
-      
-      
-    return successfulDays;
-    
+     
+    return successfulDays; 
   }
+
+  sumSessionLengths(sessions) {
+    let result = 0;
+    for (let i=0; i<sessions.length; i++) {
+      let sessionLength = parseInt(sessions[i].sessionLengthInSeconds, 10);
+      result += sessionLength;
+    }
+
+    return result;
+  }
+
+
+  // CONTINUE WITH:
+  // we should only use utc milliseconds to represent all local device times (start/end of day/week)
+  // have method that provides sunday at midnight in terms of utc ms
+  // find way to stop using js methods based on local time {getDate(), setDate(), etc}
+  // comparison with session data will be ready
+  // remove dateTimeOffsetMinutes parameters from methods
 
   //
   //
@@ -171,6 +194,11 @@ export default class UserInfo extends React.Component {
       // user sessions are stored in UTC time in backend, so convert to local!
       let currentSessionStartMsUtc = Date.parse(currentSession.sessionStartTime);
       let currentSessionStartMsLocal = currentSessionStartMsUtc + dateTimeOffsetMinutes*60000;
+      
+      console.log("currentSessionStartMsLocal: "+currentSessionStartMsLocal);
+      console.log("periodStartMs: "+periodStartMs);
+      console.log("periodEndMs: "+periodEndMs);
+      
       if (currentSessionStartMsLocal >= periodStartMs && currentSessionStartMsLocal <= periodEndMs) {
         result.push(currentSession); // this will still contain utc time
       }

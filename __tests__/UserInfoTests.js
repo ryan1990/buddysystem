@@ -143,27 +143,40 @@ let userSessions = [{
     sessionLengthInSeconds:"700"
 }];
 
-// describe("successfulDaysInWeek", () => {
-//     test("returns correct value", () => {
-//         let weekStart = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
-//         let weekEnd = new Date(Date.parse("2019-10-20T00:00:00.000Z"));
-//         let commitment = {
-//             minutesPerDay:10,
-//             daysPerWeek:5
-//         }
+// describe("successfulDaysWithinPeriod", () => {
+//     test("returns correct value with dateTimeOffsetMinutes = 0", () => {
+//         let periodStart = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
+//         let periodEnd = new Date(Date.parse("2019-10-20T00:00:00.000Z"));
+//         let minutesPerDay = 10;
+//         let dateTimeOffsetMinutes = 0;
 
 //         let expected = 5;
 
 //         let userInfoClass = new UserInfo();
 
-//         expect(userInfoClass.successfulDaysInWeek(userSessions, weekStart, weekEnd, commitment)).toEqual(expected);
+//         let actual = userInfoClass.successfulDaysWithinPeriod(userSessions, periodStart, periodEnd, minutesPerDay, dateTimeOffsetMinutes);
+        
+//         expect(actual).toEqual(expected);
 //     })
 // })
 
+describe("sumSessionLengths", () => {
+    test("test for correct sum", () => {
+        let userInfoClass = new UserInfo();
+
+        let actualResult = userInfoClass.sumSessionLengths(userSessions);
+        let expectedResult = 4300;
+        expect(actualResult).toEqual(expectedResult);
+    })
+})
+
 describe("sessionsStartingWithinPeriod", () => {
-    test("sunday with dateTimeOffsetMinutes = 0", () => {
-        let periodStartMs = Date.parse("2019-10-06T00:00:00.000Z");
-        let periodEndMs = Date.parse("2019-10-07T00:00:00.000Z");
+    test("sunday with dateTimeOffsetMinutes = 0 WITH MS input", () => {
+        let periodStartMs = 1570924800000;//Date.parse("2019-10-06T00:00:00.000Z");
+        let periodEndMs = 1571011200000;//Date.parse("2019-10-07T00:00:00.000Z");
+
+
+
         let dateTimeOffsetMinutes = 0;
         let expectedResult = [{
             userId:"ryan12",
@@ -176,110 +189,133 @@ describe("sessionsStartingWithinPeriod", () => {
         let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
 
         expect(actualResult).toEqual(expectedResult);
-    }),
-    test("wednesday with dateTimeOffsetMinutes = 0", () => {
-        let periodStartMs = Date.parse("2019-10-09T00:00:00.000Z");
-        let periodEndMs = Date.parse("2019-10-10T00:00:00.000Z");
-        let dateTimeOffsetMinutes = 0;
-        let expectedResult = [{
-            userId:"ryan12",
-            sessionStartTime:"2019-10-09T00:02:00.333Z", // wed
-            sessionLengthInSeconds:"200"
-        },
-        {
-            userId:"ryan12",
-            sessionStartTime:"2019-10-09T23:02:00.333Z", // wed
-            sessionLengthInSeconds:"500"
-        }];
+    })//,
+    ///////
+    
+    
+    // test("sunday with dateTimeOffsetMinutes = 0", () => {
+    //     let periodStartMs = Date.parse("2019-10-06T00:00:00.000Z");
+    //     let periodEndMs = Date.parse("2019-10-07T00:00:00.000Z");
+    //     let dateTimeOffsetMinutes = 0;
+    //     let expectedResult = [{
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-06T21:11:42.298Z", // sun
+    //         sessionLengthInSeconds:"600"
+    //     }];
 
-        let userInfoClass = new UserInfo();
+    //     let userInfoClass = new UserInfo();
 
-        let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
-        expect(actualResult).toEqual(expectedResult);
-    }),
-    test("thursday with dateTimeOffsetMinutes = 0", () => {
-        let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
-        let periodEndMs = Date.parse("2019-10-11T00:00:00.000Z");
-        let dateTimeOffsetMinutes = 0;
-        let expectedResult = [];
+    //     let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
 
-        let userInfoClass = new UserInfo();
+    //     expect(actualResult).toEqual(expectedResult);
+    // }),
+    // test("wednesday with dateTimeOffsetMinutes = 0", () => {
+    //     let periodStartMs = Date.parse("2019-10-09T00:00:00.000Z");
+    //     let periodEndMs = Date.parse("2019-10-10T00:00:00.000Z");
+    //     let dateTimeOffsetMinutes = 0;
+    //     let expectedResult = [{
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-09T00:02:00.333Z", // wed
+    //         sessionLengthInSeconds:"200"
+    //     },
+    //     {
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-09T23:02:00.333Z", // wed
+    //         sessionLengthInSeconds:"500"
+    //     }];
 
-        let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
+    //     let userInfoClass = new UserInfo();
 
-        expect(actualResult).toEqual(expectedResult);
-    }),
-    test("thursday with dateTimeOffsetMinutes = -3*60 = -180", () => {
-        let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
-        let periodEndMs = Date.parse("2019-10-11T00:00:00.000Z");
-        let dateTimeOffsetMinutes = -3*60;
-        let expectedResult = [{
-            userId:"ryan12",
-            sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
-            sessionLengthInSeconds:"1100"
-        }];
+    //     let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
+    //     expect(actualResult).toEqual(expectedResult);
+    // }),
+    // test("thursday with dateTimeOffsetMinutes = 0", () => {
+    //     let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
+    //     let periodEndMs = Date.parse("2019-10-11T00:00:00.000Z");
+    //     let dateTimeOffsetMinutes = 0;
+    //     let expectedResult = [];
 
-        let userInfoClass = new UserInfo();
+    //     let userInfoClass = new UserInfo();
 
-        let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
+    //     let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
 
-        expect(actualResult).toEqual(expectedResult);
-    }),
-    test("whole week with dateTimeOffsetMinutes = 0", () => {
-        let periodStartMs = Date.parse("2019-10-06T00:00:00.000Z");
-        let periodEndMs = Date.parse("2019-10-13T00:00:00.000Z");
-        let dateTimeOffsetMinutes = 0;
-        let expectedResult = userSessions;
+    //     expect(actualResult).toEqual(expectedResult);
+    // }),
+    // test("thursday with dateTimeOffsetMinutes = -3*60 = -180", () => {
+    //     let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
+    //     let periodEndMs = Date.parse("2019-10-11T00:00:00.000Z");
+    //     let dateTimeOffsetMinutes = -3*60;
+    //     let expectedResult = [{
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
+    //         sessionLengthInSeconds:"1100"
+    //     }];
 
-        let userInfoClass = new UserInfo();
+    //     let userInfoClass = new UserInfo();
 
-        let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
+    //     let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
 
-        expect(actualResult).toEqual(expectedResult);
-    }),
-    test("thursday through sunday dateTimeOffsetMinutes = 0", () => {
-        let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
-        let periodEndMs = Date.parse("2019-10-13T00:00:00.000Z");
-        let dateTimeOffsetMinutes = 0;
-        let expectedResult = [{
-            userId:"ryan12",
-            sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
-            sessionLengthInSeconds:"1100"
-        },
-        {
-            userId:"ryan12",
-            sessionStartTime:"2019-10-12T00:02:00.333Z", // sat
-            sessionLengthInSeconds:"700"
-        }];
+    //     expect(actualResult).toEqual(expectedResult);
+    // }),
+    // test("whole week with dateTimeOffsetMinutes = 0", () => {
+    //     let periodStartMs = Date.parse("2019-10-06T00:00:00.000Z");
+    //     let periodEndMs = Date.parse("2019-10-13T00:00:00.000Z");
+    //     let dateTimeOffsetMinutes = 0;
+    //     let expectedResult = userSessions;
 
-        let userInfoClass = new UserInfo();
+    //     let userInfoClass = new UserInfo();
 
-        let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
+    //     let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
 
-        expect(actualResult).toEqual(expectedResult);
-    }),
-    test("thursday through sunday dateTimeOffsetMinutes = -24*60 = 1440", () => {
-        let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
-        let periodEndMs = Date.parse("2019-10-13T00:00:00.000Z");
-        let dateTimeOffsetMinutes = -24*60;
-        let expectedResult = [{
-            userId:"ryan12",
-            sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
-            sessionLengthInSeconds:"1100"
-        },
-        {
-            userId:"ryan12",
-            sessionStartTime:"2019-10-12T00:02:00.333Z", // sat
-            sessionLengthInSeconds:"700"
-        }];
+    //     expect(actualResult).toEqual(expectedResult);
+    // }),
+    // test("thursday through sunday dateTimeOffsetMinutes = 0", () => {
+    //     let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
+    //     let periodEndMs = Date.parse("2019-10-13T00:00:00.000Z");
+    //     let dateTimeOffsetMinutes = 0;
+    //     let expectedResult = [{
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
+    //         sessionLengthInSeconds:"1100"
+    //     },
+    //     {
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-12T00:02:00.333Z", // sat
+    //         sessionLengthInSeconds:"700"
+    //     }];
 
-        let userInfoClass = new UserInfo();
+    //     let userInfoClass = new UserInfo();
 
-        let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
+    //     let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
 
-        expect(actualResult).toEqual(expectedResult);
-    })
+    //     expect(actualResult).toEqual(expectedResult);
+    // }),
+    // test("thursday through sunday dateTimeOffsetMinutes = 24*60 = 1440", () => {
+    //     let periodStartMs = Date.parse("2019-10-10T00:00:00.000Z");
+    //     let periodEndMs = Date.parse("2019-10-13T00:00:00.000Z");
+    //     let dateTimeOffsetMinutes = 24*60;
+    //     let expectedResult = [{
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-09T00:02:00.333Z", // wed
+    //         sessionLengthInSeconds:"200"
+    //     },
+    //     {
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-09T23:02:00.333Z", // wed
+    //         sessionLengthInSeconds:"500"
+    //     },
+    //     {
+    //         userId:"ryan12",
+    //         sessionStartTime:"2019-10-11T00:02:00.333Z", // fri
+    //         sessionLengthInSeconds:"1100"
+    //     }];
 
+    //     let userInfoClass = new UserInfo();
+
+    //     let actualResult = userInfoClass.sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs, dateTimeOffsetMinutes);
+
+    //     expect(actualResult).toEqual(expectedResult);
+    // })
 })
 
 
