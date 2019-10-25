@@ -21,11 +21,6 @@ export default class UserInfo extends React.Component {
     // console.log("this.successfulWeeks: "+JSON.stringify(this.successfulWeeks));
   }
 
-//   commitment: {
-//     minutesPerDay:10,
-//     daysPerWeek:5
-// }
-
   async getResponseForGoalAndCommitment(username) {
     api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {

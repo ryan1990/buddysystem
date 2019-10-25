@@ -121,8 +121,10 @@ describe("getWeeksSubtracted", () => {
     })
 })
 
-
-// currently dependent on PST
+// TODO:
+// currently dependent on PST,
+// should totally MOCK getPreviousSundayAtMidnight()
+// and consider injecting/extracting the value from it all around the class
 describe("successfulWeekStreakUntilGivenTime", () => {
     test("returns 1 for a successful last week", () => {
         let userSessions1 = [{
