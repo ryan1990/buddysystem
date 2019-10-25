@@ -75,20 +75,23 @@ export default class UserInfo extends React.Component {
     return dateInput.substring(1, dateInput.length-1);
   }
 
-  // see if commitment has been met for the specific weeks leading up to the current one
-  successfulWeekStreak(userSessions, commitment) {
+  // see if commitment has been met for the specific weeks leading up to the givenTime
+  // this considers weeks leading up to and including the previous entire week (most recent sunday through saturday)
+  successfulWeekStreakUntilGivenTime(userSessions, commitment, givenTime) {
     // have method taking in a particular week returning true or false for met
     // find number of day periods fulfilling commitment minute total (combining multiple sessions possibly). Return true once this equals commitment days
     let count = 0;
     
-    let weekEnd = this.getPreviousSundayAtMidnight(Date.now())
+    let dateTimeOffsetMinutes = 0; // TODO: remove
+    let weekEnd = this.getPreviousSundayAtMidnight(givenTime, dateTimeOffsetMinutes);
     let weekStart = this.getWeeksSubtracted(weekEnd, 1);
+
+    
 
     let weekWasSuccessful = true;
     while (true) {
 
       weekWasSuccessful = this.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
-
       if (!weekWasSuccessful) {
         return count;
       }
@@ -109,8 +112,6 @@ export default class UserInfo extends React.Component {
   // should return a Date with epoch in UTC perspective of user's local last Sunday at midnight
   // this not unit testable for running in any timezone!
   getPreviousSundayAtMidnight(date, dateTimeOffsetMinutes) {
-    //https://www.moesif.com/blog/technical/timestamp/manage-datetime-timestamp-timezones-in-api/#
-
     let dateObj = new Date(date);
     dateObj.setHours(0,0,0,0);
     dateObj.setDate(dateObj.getDate() - dateObj.getDay());
@@ -123,18 +124,13 @@ export default class UserInfo extends React.Component {
     let dateEpoch = date.getTime();
     let resultDateEpoch = dateEpoch - weeks*weekInMs;
     return new Date(resultDateEpoch);
-    
-    // let dateObj = new Date(date);
-    // dateObj.setDate(dateObj.getDate() - weeks*7);
-    // return dateObj;
   }
 
   // good place to mock for unit test!
   weekWasSuccessful(userSessions, weekStart, weekEnd, commitment) {
-    let successfulDaysInWeek = this.successfulDaysWithinPeriod(userSessions, weekStart, weekEnd, commitment.minutesPerDay);
+    let dateTimeOffsetMinutes = 0; // TODO: should remove everywhere eventually
+    let successfulDaysInWeek = this.successfulDaysWithinPeriod(userSessions, weekStart, weekEnd, commitment.minutesPerDay, dateTimeOffsetMinutes);
     return successfulDaysInWeek >= commitment.daysPerWeek;
-    // return this.successfulDaysInWeek >= commDays
-    return true; // temp:
   }
 
   // periodStart, periodEnd are in terms of UTC
