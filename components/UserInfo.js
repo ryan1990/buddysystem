@@ -88,6 +88,7 @@ export default class UserInfo extends React.Component {
     let dateObj = new Date(date);
     dateObj.setHours(0,0,0,0);
     dateObj.setDate(dateObj.getDate() - dateObj.getDay());
+    console.log("LLLLL"+JSON.stringify(dateObj));
     return new Date(dateObj);
   }
 
@@ -99,7 +100,6 @@ export default class UserInfo extends React.Component {
     return new Date(resultDateEpoch);
   }
 
-  // good place to mock for unit test!
   weekWasSuccessful(userSessions, weekStart, weekEnd, commitment) {
     let successfulDaysInWeek = this.successfulDaysWithinPeriod(userSessions, weekStart, weekEnd, commitment.minutesPerDay);
     return successfulDaysInWeek >= commitment.daysPerWeek;

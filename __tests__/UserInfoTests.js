@@ -1,44 +1,4 @@
-//https://www.valentinog.com/blog/jest/
-
-//import { UserInfo } from '../components/UserInfo';
-// import React from 'react';
-// import { Button, Text, View } from 'react-native';
-// import Hey from '../components/UserInfo';
-import UserInfo from '../components/UserInfo';
-
-// TEMP may break soon because of PST fall back.
-// Don't expect this to pass at any time or location
-// describe("getPreviousSundayAtMidnight", () => {
-//     test("returns correct date", () => {
-//         let date = new Date(Date.parse("2019-10-17T21:11:42.298Z")); 
-//         let dateTimeOffsetMinutes = 0;
-//         let expected = new Date(Date.parse("2019-10-13T07:00:00.000Z"));
-
-//         let userInfoClass = new UserInfo();
-
-//         let actual = userInfoClass.getPreviousSundayAtMidnight(date, dateTimeOffsetMinutes);
-
-//         expect(actual).toEqual(expected);
-
-//     })
-    // test("returns correct date", () => {
-    //     let date = new Date(Date.parse("2019-10-17T21:11:42.298Z")); 
-    //     let dateTimeOffsetMinutes = -420;
-    //     let expected = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
-
-    //     let userInfoClass = new UserInfo();
-
-    //     expect(userInfoClass.getPreviousSundayAtMidnight(date, dateTimeOffsetMinutes)).toEqual(expected);
-
-    //     //https://medium.com/codeclan/mocking-es-and-commonjs-modules-with-jest-mock-37bbb552da43
-
-    //     //UserInfo.weekWasSuccessful(weekStart, weekEnd, commitment);
-
-    //     // jest.mock('./UserInfo', () => () => ({
-    //     //     successfulWeeks: 0
-    //     // }));
-    // })
-// })
+import UserInfo from "../components/UserInfo";
 
 describe("getWeeksSubtracted", () => {
     test("subtract 1 week", () => {
@@ -79,11 +39,13 @@ describe("getWeeksSubtracted", () => {
     })
 })
 
-// TODO:
-// currently dependent on PST,
-// should MOCK getPreviousSundayAtMidnight()
-// and consider injecting/extracting the value from it all around the class
 describe("successfulWeekStreakUntilGivenTime", () => {
+    jest.mock("../components/UserInfo");
+    const userInfoMockInstance = new UserInfo();
+    userInfoMockInstance.getPreviousSundayAtMidnight = jest.fn().mockImplementation(() => {
+        return new Date("2019-10-13T07:00:00.000Z");
+    });
+    
     test("returns 1 for a successful last week", () => {
         let userSessions1 = [{
             userId:"ryan12",
@@ -100,20 +62,38 @@ describe("successfulWeekStreakUntilGivenTime", () => {
             minutesPerDay:10,
             daysPerWeek:2
         };
-        let givenTime = new Date(Date.parse("2019-10-16T10:00:00.000Z"));
 
+        let givenTime = new Date(Date.parse("2019-10-16T10:00:00.000Z")); // won't matter with mock
         let expected = 1;
-
-        let userInfoClass = new UserInfo();
-
-        let actual = userInfoClass.successfulWeekStreakUntilGivenTime(userSessions1, commitment, givenTime);
-
+        let actual = userInfoMockInstance.successfulWeekStreakUntilGivenTime(userSessions1, commitment, givenTime);
         expect(actual).toEqual(expected);
+    }),
+    test("returns 0 for an empty week", () => {
+        const userInfoMockInstanceDeepPast = new UserInfo();
+        userInfoMockInstanceDeepPast.getPreviousSundayAtMidnight = jest.fn().mockImplementation(() => {
+            return new Date("1990-01-03T07:00:00.000Z"); // wed
+        });
+
+        let userSessions1 = [{
+            userId:"ryan12",
+            sessionStartTime:"2019-10-07T15:11:42.298Z", // mon
+            sessionLengthInSeconds:"800"
+        },
+        {
+            userId:"ryan12",
+            sessionStartTime:"2019-10-12T15:02:00.333Z", // sat
+            sessionLengthInSeconds:"700"
+        }];
+
+        let commitment = {
+            minutesPerDay:10,
+            daysPerWeek:2
+        };
         
-        let newGivenTime = new Date(Date.parse("2018-02-02T10:00:00.000Z"));
-        let newActual = userInfoClass.successfulWeekStreakUntilGivenTime(userSessions1, commitment, newGivenTime);
-        let newExpected = 0;
-        expect(newActual).toEqual(newExpected);
+        let givenTime = new Date(Date.parse("2018-02-02T10:00:00.000Z")); // won't matter with mock
+        let actual = userInfoMockInstanceDeepPast.successfulWeekStreakUntilGivenTime(userSessions1, commitment, givenTime);
+        let expected = 0;
+        expect(actual).toEqual(expected);
     }),
     test("returns 2 for successful last 2 weeks", () => {
         let userSessions2 = [{
@@ -141,13 +121,9 @@ describe("successfulWeekStreakUntilGivenTime", () => {
             minutesPerDay:10,
             daysPerWeek:2
         };
-        let givenTime = new Date(Date.parse("2019-10-16T10:00:00.000Z"));
-
+        let givenTime = new Date(Date.parse("2019-10-16T10:00:00.000Z")); // won't matter with mock
         let expected = 2;
-
-        let userInfoClass = new UserInfo();
-
-        let actual = userInfoClass.successfulWeekStreakUntilGivenTime(userSessions2, commitment, givenTime);
+        let actual = userInfoMockInstance.successfulWeekStreakUntilGivenTime(userSessions2, commitment, givenTime);
 
         expect(actual).toEqual(expected);
     })
@@ -189,42 +165,68 @@ let userSessions = [{
     sessionLengthInSeconds:"700"
 }];
 
-// describe("weekWasSuccessful", () => {
-//     test("returns true for successful week", () => {
-//         let weekStart = new Date(Date.parse("2019-10-06T00:00:00.000Z"));
-//         let weekEnd = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
-//         let commitment = {
-//             minutesPerDay:10,
-//             daysPerWeek:5
-//         };
+describe("weekWasSuccessful", () => {
+    jest.mock("../components/UserInfo");
+    const userInfoMockInstance = new UserInfo();
+    userInfoMockInstance.successfulDaysWithinPeriod = jest.fn().mockImplementation(() => {
+        return 5;
+    });
 
-//         let expected = true;
+    test("returns true for successfulDaysInWeek = daysPerWeek", () => {
+        let weekStart = new Date(Date.parse("2019-10-06T00:00:00.000Z"));
+        let weekEnd = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
+        let commitment = {
+            minutesPerDay:10,
+            daysPerWeek:5
+        };
 
-//         let userInfoClass = new UserInfo();
+        let expected = true;
+        let actual = userInfoMockInstance.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
 
-//         let actual = userInfoClass.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
+        expect(actual).toEqual(expected);
+    }),
+    test("returns false for successfulDaysInWeek < daysPerWeek", () => {
+        let weekStart = new Date(Date.parse("2019-10-06T00:00:00.000Z"));
+        let weekEnd = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
+        let commitment = {
+            minutesPerDay:10,
+            daysPerWeek:6
+        };
 
-//         expect(actual).toEqual(expected);
-//     }),
-//     test("returns false for empty week", () => {
-//         let weekStart = new Date(Date.parse("2019-09-29T00:00:00.000Z"));
-//         let weekEnd = new Date(Date.parse("2019-10-06T00:00:00.000Z"));
-//         let commitment = {
-//             minutesPerDay:10,
-//             daysPerWeek:5
-//         };
+        let expected = false;
+        let actual = userInfoMockInstance.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
 
-//         let expected = false;
+        expect(actual).toEqual(expected);
+    }),
+    test("returns true for successfulDaysInWeek > daysPerWeek", () => {
+        let weekStart = new Date(Date.parse("2019-10-06T00:00:00.000Z"));
+        let weekEnd = new Date(Date.parse("2019-10-13T00:00:00.000Z"));
+        let commitment = {
+            minutesPerDay:10,
+            daysPerWeek:1
+        };
 
-//         let userInfoClass = new UserInfo();
+        let expected = true;
+        let actual = userInfoMockInstance.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
 
-//         let actual = userInfoClass.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
+        expect(actual).toEqual(expected);
+    }),
+    test("returns false for empty week", () => {
+        let weekStart = new Date(Date.parse("2019-09-29T00:00:00.000Z"));
+        let weekEnd = new Date(Date.parse("2019-10-06T00:00:00.000Z"));
+        let commitment = {
+            minutesPerDay:10,
+            daysPerWeek:5
+        };
 
-//         expect(actual).toEqual(expected);
-//     })
-// })
+        let userInfoClass = new UserInfo();
 
+        let expected = false;
+        let actual = userInfoClass.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
 
+        expect(actual).toEqual(expected);
+    })
+})
 
 describe("successfulDaysWithinPeriod", () => {
     test("exact week", () => {
@@ -377,28 +379,3 @@ describe("sessionsStartingWithinPeriod", () => {
         expect(actualResult).toEqual(expectedResult);
     })
 })
-
-
-
-// function filterByTerm(inputArr, searchTerm) {
-//     let regex = new RegExp(searchTerm, "i");
-//     return inputArr.filter(function(arrayElement) {
-//         return arrayElement.url.match(regex);
-//     });
-// }
-
-// describe("Filter function", () => {
-//     test("it should filter by a search term (link)", () => {
-//         let input = [
-//             { id: 1, url: "https://www.url1.dev" },
-//             { id: 2, url: "https://www.url2.dev" },
-//             { id: 3, url: "https://www.link3.dev" }
-//         ];
-
-//         let output = [{ id: 3, url: "https://www.link3.dev" }];
-
-//         expect(filterByTerm(input, "link")).toEqual(output);
-
-//         expect(filterByTerm(input, "LINK")).toEqual(output);
-//     });
-// });
