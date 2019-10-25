@@ -8,6 +8,7 @@ export default class UserInfo extends React.Component {
     this.state = {
       successfulWeeks: 0
     };
+    this.apiService = new ApiService();
   }
 
   componentDidMount = async () => {
@@ -24,9 +25,8 @@ export default class UserInfo extends React.Component {
   }
 
   async getResponseForGoalAndCommitment(username) {
-    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      let response = await api.GetUserGoalAndCommitmentFakeSuccess200(username);
+      let response = await this.apiService.GetUserGoalAndCommitmentFakeSuccess200(username);
       if (response === null) {
         return null;
       }
@@ -42,10 +42,9 @@ export default class UserInfo extends React.Component {
 
   // TODO: have this called only once for when the user logs in, not on every component mount
   async getUserSessions(username) {
-    let api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      // let response = await api.GetUserSessions(username);
-      let response = await api.GetUserSessionsFakeSuccessWithSessions(username);
+      // let response = await this.apiService.GetUserSessions(username);
+      let response = await this.apiService.GetUserSessionsFakeSuccessWithSessions(username);
       
       if (response.status === 200) {
         return response.data.sessions;
@@ -161,7 +160,7 @@ export default class UserInfo extends React.Component {
       let currentSessionStartMs = Date.parse(currentSession.sessionStartTime);
       
       if (currentSessionStartMs >= periodStartMs && currentSessionStartMs <= periodEndMs) {
-        result.push(currentSession); // this will still contain utc time
+        result.push(currentSession);
       }
     }
 
