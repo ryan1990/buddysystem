@@ -6,48 +6,6 @@
 // import Hey from '../components/UserInfo';
 import UserInfo from '../components/UserInfo';
 
-describe("dateConvertFromUtcToLocal", () => {
-    test("returns correct date -420 min timezone", () => {
-        let utcDate = "2019-10-22T23:31:33.198Z";
-        let dateTimeOffsetMinutes = -420;
-        let expected = new Date(Date.parse("2019-10-22T16:31:33.198Z"));
-
-        let userInfoClass = new UserInfo();
-
-        expect(userInfoClass.dateConvertFromUtcToLocal(utcDate, dateTimeOffsetMinutes)).toEqual(expected);
-    }),
-    test("returns correct date -360 min timezone", () => {
-        let utcDate = "2019-10-22T23:31:33.198Z";
-        let dateTimeOffsetMinutes = -360;
-        let expected = new Date(Date.parse("2019-10-22T17:31:33.198Z"));
-
-        let userInfoClass = new UserInfo();
-
-        expect(userInfoClass.dateConvertFromUtcToLocal(utcDate, dateTimeOffsetMinutes)).toEqual(expected);
-    })
-})
-
-describe("dateConvertFromLocalToUtc", () => {
-    test("returns correct date -420 min timezone", () => {
-        let localDate = new Date(Date.parse("2019-10-22T16:31:33.198Z"));
-        let dateTimeOffsetMinutes = -420;
-        let expected = "2019-10-22T23:31:33.198Z";
-
-        let userInfoClass = new UserInfo();
-
-        expect(userInfoClass.dateConvertFromLocalToUtc(localDate, dateTimeOffsetMinutes)).toEqual(expected);
-    }),
-    test("returns correct date -360 min timezone", () => {
-        let localDate = new Date(Date.parse("2019-10-22T17:31:33.198Z"));
-        let dateTimeOffsetMinutes = -360;
-        let expected = "2019-10-22T23:31:33.198Z";
-
-        let userInfoClass = new UserInfo();
-
-        expect(userInfoClass.dateConvertFromLocalToUtc(localDate, dateTimeOffsetMinutes)).toEqual(expected);
-    })
-})
-
 // TEMP may break soon because of PST fall back.
 // Don't expect this to pass at any time or location
 // describe("getPreviousSundayAtMidnight", () => {

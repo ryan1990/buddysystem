@@ -57,17 +57,6 @@ export default class UserInfo extends React.Component {
     }
   }
 
-  // accepts ISO 8601 and returns JS Date object. ISO 8601 Example: "2019-10-22T23:31:33.198Z"
-  dateConvertFromUtcToLocal(utcDate, dateTimeOffsetMinutes) {
-    let utcDateMs = Date.parse(utcDate);
-    return new Date(utcDateMs + dateTimeOffsetMinutes*60000);
-  }
-
-  // accepts JS Date object and returns ISO 8601. ISO 8601 Example: "2019-10-22T23:31:33.198Z"
-  dateConvertFromLocalToUtc(localDate, dateTimeOffsetMinutes) {
-    return this.removeDateEscapeCharacters(JSON.stringify(new Date(localDate.getTime() - dateTimeOffsetMinutes*60000)));
-  }
-
   removeDateEscapeCharacters(dateInput) {
     return dateInput.substring(1, dateInput.length-1);
   }
