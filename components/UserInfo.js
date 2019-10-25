@@ -5,7 +5,9 @@ import ApiService from './../tests/ApiService';
 export default class UserInfo extends React.Component {
   constructor(props) {
     super();
-    this.successfulWeeks = 0;
+    this.state = {
+      successfulWeeks: 0
+    };
   }
 
   componentDidMount = async () => {
@@ -14,11 +16,11 @@ export default class UserInfo extends React.Component {
 
     let responseForGoalAndCommitment = await this.getResponseForGoalAndCommitment(this.props.loggedInUser);
     let commitment = responseForGoalAndCommitment.data.commitment;
+    let now = new Date(Date.now());
 
     console.log("comm: "+JSON.stringify(commitment));
-    this.successfulWeeks = this.successfulWeekStreak(userSessions, commitment);
-
-    // console.log("this.successfulWeeks: "+JSON.stringify(this.successfulWeeks));
+     let successfulWeekStreak = this.successfulWeekStreakUntilGivenTime(userSessions, commitment, now);
+     this.setState({ successfulWeeks: successfulWeekStreak});
   }
 
   async getResponseForGoalAndCommitment(username) {
@@ -73,19 +75,14 @@ export default class UserInfo extends React.Component {
   // see if commitment has been met for the specific weeks leading up to the givenTime
   // this considers weeks leading up to and including the previous entire week (most recent sunday through saturday)
   successfulWeekStreakUntilGivenTime(userSessions, commitment, givenTime) {
-    // have method taking in a particular week returning true or false for met
-    // find number of day periods fulfilling commitment minute total (combining multiple sessions possibly). Return true once this equals commitment days
     let count = 0;
     
     let dateTimeOffsetMinutes = 0; // TODO: remove
     let weekEnd = this.getPreviousSundayAtMidnight(givenTime, dateTimeOffsetMinutes);
     let weekStart = this.getWeeksSubtracted(weekEnd, 1);
-
-    
-
     let weekWasSuccessful = true;
-    while (true) {
 
+    while (true) {
       weekWasSuccessful = this.weekWasSuccessful(userSessions, weekStart, weekEnd, commitment);
       if (!weekWasSuccessful) {
         return count;
@@ -95,12 +92,6 @@ export default class UserInfo extends React.Component {
       weekEnd = weekStart;
       weekStart = this.getWeeksSubtracted(weekStart, 1);
     }
-
-    // last week, if met, keep checking...
-    // 2nd to last, if met, keep checking...
-    // 3rd to last, if met, keep checking...
-    // ...
-
   }
 
   // represents start of the week from user's local timezone perspective
@@ -171,14 +162,6 @@ export default class UserInfo extends React.Component {
     return result;
   }
 
-
-  // CONTINUE WITH:
-  // we should only use utc milliseconds to represent all local device times (start/end of day/week)
-  // have method that provides sunday at midnight in terms of utc ms
-  // find way to stop using js methods based on local time {getDate(), setDate(), etc}
-  // comparison with session data will be ready
-  // remove dateTimeOffsetMinutes parameters from methods
-
   //
   //
   // WE ASSUME SESSIONS ARE NOT SORTED BY START TIME.
@@ -195,11 +178,6 @@ export default class UserInfo extends React.Component {
       let currentSessionStartMsUtc = Date.parse(currentSession.sessionStartTime);
       let currentSessionStartMsLocal = currentSessionStartMsUtc + dateTimeOffsetMinutes*60000;
       
-      // console.log("currentSessionStartMsUtc: "+currentSessionStartMsUtc);
-      // console.log("currentSessionStartMsLocal: "+currentSessionStartMsLocal);
-      // console.log("periodStartMs: "+periodStartMs);
-      // console.log("periodEndMs: "+periodEndMs);
-      
       if (currentSessionStartMsLocal >= periodStartMs && currentSessionStartMsLocal <= periodEndMs) {
         result.push(currentSession); // this will still contain utc time
       }
@@ -208,15 +186,11 @@ export default class UserInfo extends React.Component {
     return result;
   }
 
-  // https://www.youtube.com/watch?v=Omppm_YUG2g
-  // https://www.youtube.com/watch?v=YxcIj_SLflw
-  // https://www.youtube.com/watch?v=bz4jTx4v-l8
-
   render() {
     return (
       <View>
         <View style={{ margin: 10 }}>
-          <Text>Hello {this.props.loggedInUser}, Streak of successful weeks: {this.successfulWeeks}</Text>
+          <Text>Hello {this.props.loggedInUser}, Streak of successful weeks: {this.state.successfulWeeks}</Text>
         </View>
         <View style={{ margin: 10 }}>
           <Button title="Logout" onPress={this.props.logoutUser} />

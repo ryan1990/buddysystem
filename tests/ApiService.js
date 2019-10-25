@@ -19,12 +19,27 @@ export default class ApiService {
                 sessions: [
                     {
                         userId:"ryan12",
-                        sessionStartTime:"2012-04-23T18:25:43.511Z",
+                        sessionStartTime:"2019-10-13T18:25:43.511Z",
                         sessionLengthInSeconds:"955"
                     },
                     {
                         userId:"ryan12",
-                        sessionStartTime:"2012-04-24T19:28:44.777Z",
+                        sessionStartTime:"2019-10-14T18:25:43.511Z",
+                        sessionLengthInSeconds:"1202"
+                    },
+                    {
+                        userId:"ryan12",
+                        sessionStartTime:"2019-10-15T18:25:43.511Z",
+                        sessionLengthInSeconds:"1202"
+                    },
+                    {
+                        userId:"ryan12",
+                        sessionStartTime:"2019-10-16T18:25:43.511Z",
+                        sessionLengthInSeconds:"1202"
+                    },
+                    {
+                        userId:"ryan12",
+                        sessionStartTime:"2019-10-17T18:25:43.511Z",
                         sessionLengthInSeconds:"1202"
                     }
                 ]
