@@ -193,7 +193,6 @@ export default class CreateUserScreen extends React.Component {
                   }
 
                   this.props.loginUser(this.state.username);
-                  //Alert.alert("Create User button clicked in !userExists condition");
                 } else {
                   Alert.alert(null, "An account with this Username already exists.");
                 }

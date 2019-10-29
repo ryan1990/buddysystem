@@ -19,7 +19,7 @@ export default class LoginScreen extends React.Component {
     const { username } = this.state;
 
     if (!validateAtLeast4Characters(username)) {
-      Alert.alert("Please enter a username with at least 4 characters.");
+      Alert.alert(null, "Please enter a username with at least 4 characters.");
       return;
     }
 
@@ -28,9 +28,9 @@ export default class LoginScreen extends React.Component {
     if (userExists) {
       this.props.loginUser(this.state.username); // show user logged in
     } else if (userExists === false) {
-      Alert.alert("There is no account associated with this Username. Check your spelling or click Create new account.");
+      Alert.alert(null, "There is no account associated with this Username. Check your spelling or click Create new account.");
     } else { // userExists === null OR undefined, etc.
-      Alert.alert("Error reaching server, check your internet connection.");
+      Alert.alert(null, "Error reaching server, check your internet connection.");
     }
   }
 

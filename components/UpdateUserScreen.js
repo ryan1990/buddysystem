@@ -16,6 +16,7 @@ export default class UpdateUserScreen extends React.Component {
       minutesPerDay: '',
       daysPerWeek: '4'
     };
+    this.apiService = new ApiService();
   }
 
   componentDidMount = async () => {
@@ -35,9 +36,8 @@ export default class UpdateUserScreen extends React.Component {
   }
 
   async getResponseForGoalAndCommitment(username) {
-    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      let response = await api.GetUserGoalAndCommitmentFakeSuccess200(username);
+      let response = await this.apiService.GetUserGoalAndCommitmentFakeSuccess200(username);
       if (response === null) {
         return null;
       }
@@ -75,10 +75,9 @@ export default class UpdateUserScreen extends React.Component {
   }
 
   async updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek) {
-    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      // let response = await api.UpdateUser(username, smartGoal, minutesPerDay, daysPerWeek);
-      let response = await api.UpdateUserFakeSuccess201();
+      // let response = await this.apiService.UpdateUser(username, smartGoal, minutesPerDay, daysPerWeek);
+      let response = await this.apiService.UpdateUserFakeSuccess201();
       if (response.status === 200) {
         return true;
       } else {
