@@ -16,6 +16,7 @@ export default class StopwatchScreen extends React.Component {
       sessionStartTime: null,
       runningTime: 0
     };
+    this.apiService = new ApiService();
   }
 
   handleStartPause = () => {
@@ -64,11 +65,8 @@ export default class StopwatchScreen extends React.Component {
   };
 
   async writeSessionToBackend(username, sessionStartTime, sessionLengthInSeconds) {
-    console.log("this.writeSessionToBackend:"+username+", "+sessionStartTime+", "+sessionLengthInSeconds);
-    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      // let response = await api.CreateUser(username, smartGoal, minutesPerDay, daysPerWeek);
-      let response = await api.SubmitPracticeSessionFakeSuccess201();
+      let response = await this.apiService.SubmitPracticeSessionFakeSuccess201();
       if (response === null) {
         return null;
       }

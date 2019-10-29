@@ -10,9 +10,6 @@ import LoginScreen from './components/LoginScreen';
 import CreateUserScreen from './components/CreateUserScreen';
 import UpdateUserScreen from './components/UpdateUserScreen';
 
-// temp:
-import ApiService from './tests/ApiService';
-
 export default class App extends React.Component {
   loggedInUserStorageKey = '@loggedInUser';
 
@@ -41,11 +38,8 @@ export default class App extends React.Component {
   // when app starts, it checks storage to see if Key exists and sets state.loggedInUser to Value from storage if exists, else set to "". Key = loggedInUserStorageKey, Value = "myusername123"
   // logout: set state to "" AND remove key from storage. Key = loggedInUserStorageKey, Value = "myusername123"
   // login: create key/value in storage and set state to the value. Key = loggedInUserStorageKey. Value = "myusername123"
-  // create new account: after confimed that username is in AWS as the account, perform login with value set to the username.
+  // create new account: after confirmed that username is in AWS as the account, perform login with value set to the username.
   componentDidMount = () => AsyncStorage.getItem(this.loggedInUserStorageKey).then((value) => {
-    // temp:
-    this.temp();
-
     if (value !== null) { // key for username exists, indicating they are logged in
       this.setState({ loggedInUser: value });
       this.changeScreenToStopwatch();
@@ -54,18 +48,6 @@ export default class App extends React.Component {
       this.changeScreenToLogin();
     }
   });
-
-  // temp:
-  async temp() {
-    api = new ApiService();
-    try {
-      // let response = await api.CreateUser(username, smartGoal, minutesPerDay, daysPerWeek);
-      let response = await api.PostCallExperiment();
-      // return something????
-    } catch(error) {
-      return null;
-    }
-  }
 
   // create key/value in storage and set state to username
   loginUser(username) {

@@ -15,6 +15,7 @@ export default class CreateUserScreen extends React.Component {
       minutesPerDay: '',
       daysPerWeek: '4'
     };
+    this.apiService = new ApiService();
   }
 
   // injecting dependency for alert method
@@ -59,10 +60,8 @@ export default class CreateUserScreen extends React.Component {
 
   // make call to backend to see if user exists
   async userExistsInBackend(user) {
-    api = new ApiService();
-    let response = await api.UserExistsFakeFalse(); // put in try?
-
     try {
+      let response = await this.apiService.UserExistsFakeFalse(); // put in try?
       return response.data.userIdExists;
     } catch(error) {
       return null;
@@ -70,10 +69,9 @@ export default class CreateUserScreen extends React.Component {
   }
   
   async createUserInBackend(username) {
-    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      // let response = await api.CreateUser(username);
-      let response = await api.CreateUserFakeSuccess201();
+      // let response = await this.apiService.CreateUser(username);
+      let response = await this.apiService.CreateUserFakeSuccess201();
       if (response.status === 201) {
         return true;
       } else {
@@ -85,10 +83,9 @@ export default class CreateUserScreen extends React.Component {
   }
 
   async updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek) {
-    api = new ApiService(); // TODO: inject this dependency, or better yet, make a class property injected into constructor
     try {
-      // let response = await api.UpdateUser(username, smartGoal, minutesPerDay, daysPerWeek);
-      let response = await api.UpdateUserFakeSuccess201();
+      // let response = await this.apiService.UpdateUser(username, smartGoal, minutesPerDay, daysPerWeek);
+      let response = await this.apiService.UpdateUserFakeSuccess201();
       if (response.status === 200) {
         return true;
       } else {
