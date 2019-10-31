@@ -1,11 +1,10 @@
-// have this be update/view account info
-
+// update/view account info
 
 import * as React from 'react';
 import { Alert, Button, Picker, Text, TextInput, View } from 'react-native';
 import { validateUsesOnlyDigitCharacters } from './Validator';
 import UserInfo from './UserInfo';
-import ApiService from './../tests/ApiService';
+import ApiService from './../services/ApiService';
 
 export default class UpdateUserScreen extends React.Component {
   constructor() {
@@ -21,12 +20,11 @@ export default class UpdateUserScreen extends React.Component {
 
   componentDidMount = async () => {
     let responseForGoalAndCommitment = await this.getResponseForGoalAndCommitment(this.props.loggedInUser);
-    // console.log("responseForGoalAndComm: "+ JSON.stringify(responseForGoalAndCommitment));
+
     if (responseForGoalAndCommitment) {
       try {
         this.loadGoalAndCommitment(responseForGoalAndCommitment);
       } catch(error) {
-        console.log(error);
         Alert.alert(null, "Could not load your account info. Error parsing data."); // TODO: inject this dependency, or better yet, make a class property injected into constructor
       }
     } else {
@@ -50,19 +48,6 @@ export default class UpdateUserScreen extends React.Component {
       return null;
     }
   }
-
-
-//   response = {
-//     data: {
-//         userId:"ryan12",
-//         goal:"Learn to play Carol of the Bells on Piano by May 25th",
-//         commitment: {
-//             minutesPerDay:10,
-//             daysPerWeek:5
-//         }
-//     },
-//     status: 200
-// }
 
   loadGoalAndCommitment(responseForGoalAndCommitment) {
     let smartGoal = responseForGoalAndCommitment.data.goal.toString();

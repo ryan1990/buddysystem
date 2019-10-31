@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 import { validateAtLeast4Characters } from './Validator'; 
-import ApiService from './../tests/ApiService';
+import ApiService from './../services/ApiService';
 
 export default class LoginScreen extends React.Component {
   constructor() {
@@ -53,7 +53,7 @@ export default class LoginScreen extends React.Component {
         <View style={{ margin: 10 }}>        
           <TextInput
             value={this.state.username}
-            onChangeText={(username) => this.setState({ username: username.trim() })} // save as lowercase!!!!!
+            onChangeText={(username) => this.setState({ username: username.trim() })} // TODO: save as lowercase?
             placeholder="Username"
             style={{height: 40, borderColor: 'gray', borderWidth: 1 }}
           />

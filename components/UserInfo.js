@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Text, View } from 'react-native';
-import ApiService from './../tests/ApiService';
+import ApiService from './../services/ApiService';
 
 export default class UserInfo extends React.Component {
   constructor(props) {
@@ -13,13 +13,11 @@ export default class UserInfo extends React.Component {
 
   componentDidMount = async () => {
     let userSessions = await this.getUserSessions(this.props.loggedInUser);
-    console.log("userSessions: "+JSON.stringify(userSessions));
 
     let responseForGoalAndCommitment = await this.getResponseForGoalAndCommitment(this.props.loggedInUser);
     let commitment = responseForGoalAndCommitment.data.commitment;
     let now = new Date(Date.now());
 
-    console.log("comm: "+JSON.stringify(commitment));
      let successfulWeekStreak = this.successfulWeekStreakUntilGivenTime(userSessions, commitment, now);
      this.setState({ successfulWeeks: successfulWeekStreak});
   }
@@ -87,7 +85,6 @@ export default class UserInfo extends React.Component {
     let dateObj = new Date(date);
     dateObj.setHours(0,0,0,0);
     dateObj.setDate(dateObj.getDate() - dateObj.getDay());
-    console.log("LLLLL"+JSON.stringify(dateObj));
     return new Date(dateObj);
   }
 
@@ -146,12 +143,8 @@ export default class UserInfo extends React.Component {
     return result;
   }
 
-  //
-  //
   // WE ASSUME SESSIONS ARE NOT SORTED BY START TIME.
   // We could optimize if they were possibly
-  //
-  //
   sessionsStartingWithinPeriod(userSessions, periodStartMs, periodEndMs) {
     let result = [];
 

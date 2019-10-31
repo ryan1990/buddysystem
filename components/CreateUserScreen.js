@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Alert, Button, Picker, Text, TextInput, View, StyleSheet } from 'react-native';
 import { validateAtLeast4Characters, validateUsesOnlyDigitCharacters } from './Validator';
-import ApiService from './../tests/ApiService';
+import ApiService from './../services/ApiService';
 
 // chance to enter username to create new user account. If it exists, tell them and prompt to retry,
 
@@ -61,7 +61,7 @@ export default class CreateUserScreen extends React.Component {
   // make call to backend to see if user exists
   async userExistsInBackend(user) {
     try {
-      let response = await this.apiService.UserExistsFakeFalse(); // put in try?
+      let response = await this.apiService.UserExistsFakeFalse();
       return response.data.userIdExists;
     } catch(error) {
       return null;
@@ -96,6 +96,37 @@ export default class CreateUserScreen extends React.Component {
     }
   }
 
+  async createAccount() {
+    let validInputs = this.validateInputs(Alert.alert);
+    if (!validInputs) {
+      return;
+    }
+
+    const { username, smartGoal, minutesPerDay, daysPerWeek } = this.state;
+
+    let userExists = await this.userExistsInBackend(username); // TODO: make sure we call with all lower-case characters?
+
+    if (!userExists) {
+      let createdUserSuccessfully = await this.createUserInBackend(username);
+
+      if (createdUserSuccessfully === null) {
+        Alert.alert(null, "Could not create user account. Error reaching server, check your internet connection.");
+        return;
+      }
+
+      let updatedUserSuccessfully = await this.updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek);
+
+      if (updatedUserSuccessfully === null) {
+        Alert.alert(null, "Could not update user account. Error reaching server, check your internet connection.");
+        return;
+      }
+
+      this.props.loginUser(this.state.username);
+    } else {
+      Alert.alert(null, "An account with this Username already exists.");
+    }
+  }
+
   render() {
     return (
       <View>
@@ -106,7 +137,7 @@ export default class CreateUserScreen extends React.Component {
           <View style={{flex: 1}}>
             <TextInput style={{justifyContent: 'flex-end'}}
               value={this.state.username}
-              onChangeText={(username) => this.setState({ username: username.trim() })} // save as lowercase!!!!!
+              onChangeText={(username) => this.setState({ username: username.trim() })} // TODO: save as lowercase?
               placeholder="Username"
               style={{flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }}
             />
@@ -166,38 +197,7 @@ export default class CreateUserScreen extends React.Component {
         <View style={{ margin: 10 }}>
           <Button
             title="Create Account"
-            onPress={ async () => {                
-                let validInputs = this.validateInputs(Alert.alert);
-                if (!validInputs) {
-                  return;
-                }
-
-                const { username, smartGoal, minutesPerDay, daysPerWeek } = this.state;
-
-                let userExists = await this.userExistsInBackend(username); // make sure we call with all lower-case characters!
-
-                if (!userExists) {
-                  let createdUserSuccessfully = await this.createUserInBackend(username);
-
-                  if (createdUserSuccessfully === null) {
-                    Alert.alert(null, "Could not create user account. Error reaching server, check your internet connection.");
-                    // TODO: pass null first in all alerts in App!
-                    return;
-                  }
-
-                  let updatedUserSuccessfully = await this.updateUserGoalAndCommitment(username, smartGoal, minutesPerDay, daysPerWeek);
-
-                  if (updatedUserSuccessfully === null) {
-                    Alert.alert(null, "Could not update user account. Error reaching server, check your internet connection.");
-                    return;
-                  }
-
-                  this.props.loginUser(this.state.username);
-                } else {
-                  Alert.alert(null, "An account with this Username already exists.");
-                }
-              }
-            }
+            onPress={this.createAccount.bind(this)}
           />
         </View>
         <View style={{ margin: 10 }}>

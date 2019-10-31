@@ -2,9 +2,7 @@
 import React from 'react';
 import { Alert, Button, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import UserInfo from './UserInfo';
-import ApiService from './../tests/ApiService';
-
-// Stopwatch page should show username they are logged in as.
+import ApiService from './../services/ApiService';
 
 // Time tracker component
 export default class StopwatchScreen extends React.Component {
@@ -124,7 +122,6 @@ export default class StopwatchScreen extends React.Component {
             <TouchableHighlight style={styles.button} onPress={this.handleStartPause}>
               <Text style={{ fontSize:25, fontWeight:"bold", paddingVertical:50 }}>{status === 'unstarted' ? 'Start Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'}</Text>
             </TouchableHighlight>
-            {/* <Button onPress={this.handleStartPause} title={status === 'unstarted' ? 'Start Practice Session' : status === 'running' ? 'Pause Practice Session' : 'Resume Practice Session'} /> */}
           </View>
           <View style={{ margin: 10 }}>
             <Button title="Complete Practice Session" onPress={this.handleComplete} disabled={status === 'unstarted'} />

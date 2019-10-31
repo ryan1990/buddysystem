@@ -16,12 +16,6 @@ export default class App extends React.Component {
   constructor() {
     super();
 
-    // let loggedInUserFromStorage;
-    // this.getLoggedInUserFromStorage().then(console.log("ALL DONE"));
-    // console.log("loggedInUserFromStorage: "+loggedInUserFromStorage);
-
-    //let loggedInUser = this.getLoggedInUser();
-
     this.state = {
       screen: "LoginScreen", // can be StopwatchScreen, LoginScreen, CreateUserScreen, UpdateUserScreen
       loggedInUser: "blank"

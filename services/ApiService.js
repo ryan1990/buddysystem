@@ -1,14 +1,8 @@
 import axios from 'axios';
 
+// have username/userId be case-insensitive so user and AWS doesn't have to worry about case?
 
 export default class ApiService {
-    // constructor(apiCaller) { // pass axios in as dependency
-    //     this.apiCaller = apiCaller;
-    // }
-
-    constructor() {
-    }
-
     async GetUserSessions(userId) {
         // to be completed
     }
@@ -174,12 +168,8 @@ export default class ApiService {
 
         try {
             let response = await axios.post(uri, requestBody);
-            console.log("SUCCESS POST, response:");
-            //console.log(response);
             return response;
         } catch(error) {
-            console.log("CATCH POST, error:");
-            console.log(error);
             return error;
 
             // TODO: SEE other methods and consider returning error instead of null!
@@ -192,9 +182,7 @@ export default class ApiService {
 
         try {
             response = await axios.get(uri);
-            console.log("GOOD");
         } catch (error) {
-            console.log("ERROR, returning null");
             response = null;
             //response = error;
         }
