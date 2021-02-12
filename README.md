@@ -1,6 +1,6 @@
 # buddysystem
 React Native Mobile Time Tracker App used to capture music practice sessions. Incudes buttons, a stopwatch timer component, logging system for user-entered goals, and screen navigation.
-See __tests__ folder for the unit tests!
+See ____tests____ folder for the unit tests!
 
 Screenshots of the UI:
 
