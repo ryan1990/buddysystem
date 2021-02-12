@@ -3,6 +3,7 @@ React Native Mobile Time Tracker App used to capture music practice sessions. In
 See __tests__ folder for the unit tests!
 
 Screenshots of the UI:
+
 ![alt text](https://github.com/ryan1990/buddysystem/blob/master/assets/bs1.jpg?raw=true)
 ![alt text](https://github.com/ryan1990/buddysystem/blob/master/assets/bs2.jpg?raw=true)
 ![alt text](https://github.com/ryan1990/buddysystem/blob/master/assets/bs3.jpg?raw=true)
